@@ -23,7 +23,7 @@ m_StageNum(11)
 void GamePlayManager::StageLoad()
 {
 	std::string m_FileName;
-	m_FileName = "Resource\\Stage\\" + std::to_string(m_StageNum) + ".csv";
+	m_FileName = "Resource\\GameScene\\Stage\\" + std::to_string(m_StageNum) + ".csv";
 
 	FILE*  fp;
 	fopen_s(&fp, m_FileName.c_str(), "r");

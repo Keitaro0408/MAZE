@@ -100,6 +100,9 @@
     <ClCompile Include="Main\GamePlayManager\GamePlayManager.cpp">
       <Filter>Main\GamePlayManager</Filter>
     </ClCompile>
+    <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\GameObjectBase.cpp">
+      <Filter>Main\GameScene\GameObjectManager\GameObjectBase</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main\App.h">
@@ -135,9 +138,11 @@
     <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Ground\Ground.h">
       <Filter>Main\GameScene\GameObjectManager\GameObjectBase\Stage\Ground</Filter>
     </ClInclude>
-    <ClInclude Include="Main\ResourceId.h" />
     <ClInclude Include="Main\GamePlayManager\GamePlayManager.h">
       <Filter>Main\GamePlayManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Main\ResourceId.h">
+      <Filter>Main</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

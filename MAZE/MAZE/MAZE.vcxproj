@@ -45,6 +45,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(DXSDK_DIR)Include;$(SolutionDir)Library;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4005;4717;4006;4221;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -60,6 +61,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)Library;$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4005;4717;4006;4221;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -85,6 +87,7 @@
     <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Gimmick\Gimmick.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\GameObjectBase.cpp" />
     <ClCompile Include="Main\GamePlayManager\GamePlayManager.cpp" />
     <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Ground\Ground.cpp" />
     <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\Player\Player.cpp" />

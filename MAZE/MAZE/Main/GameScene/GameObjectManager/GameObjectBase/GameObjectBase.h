@@ -14,6 +14,9 @@ public:
 	GameObjectBase() = default;
 	virtual ~GameObjectBase() = default;
 
+	void InitializeTask(int _updateTask = 0,int _drawTask = 0);
+	void FinalizeTask();
+
 	virtual void Update(){};
 	virtual void Draw(){};
 };

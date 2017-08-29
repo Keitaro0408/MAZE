@@ -1,7 +1,7 @@
 #ifndef RESOUCEID_H
 #define RESOUCEID_H
 
-namespace ResouceId
+namespace ResourceId
 {
 	namespace Title
 	{
@@ -20,14 +20,14 @@ namespace ResouceId
 	{
 		enum Sound
 		{
-			// BGM
-			// SE
+			//!< BGM
+			//!< SE
 		};
 
 		enum Texture
 		{
-			BACKGROUND_TEX,
-			PLAYER_TEX,
+			BACKGROUND_TEX, //!< ”wŒi
+			UNITY_TEX,		//!< “‡ƒeƒNƒXƒ`ƒƒ
 			TEX_MAX
 		};
 	}
