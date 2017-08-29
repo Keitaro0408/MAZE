@@ -70,13 +70,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="GamePlayManager.h" />
+    <ClInclude Include="Main\GamePlayManager\GamePlayManager.h" />
     <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Ground\Ground.h" />
     <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectBase\GameObjectBase.h" />
     <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectBase\Player\Player.h" />
     <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectBase\GameBackGround\GameBackGround.h" />
     <ClInclude Include="Main\GameScene\GameScene.h" />
     <ClInclude Include="Main\App.h" />
+    <ClInclude Include="Main\ResourceId.h" />
     <ClInclude Include="Main\TitleScene\TitleScene.h" />
     <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectManager.h" />
     <ClInclude Include="Main\GameScene\UIObjectManager\UIObjectManager.h" />
@@ -84,7 +85,7 @@
     <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Gimmick\Gimmick.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GamePlayManager.cpp" />
+    <ClCompile Include="Main\GamePlayManager\GamePlayManager.cpp" />
     <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Ground\Ground.cpp" />
     <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\Player\Player.cpp" />
     <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\GameBackGround\GameBackGround.cpp" />

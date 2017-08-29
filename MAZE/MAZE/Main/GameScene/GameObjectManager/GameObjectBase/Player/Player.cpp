@@ -4,7 +4,7 @@
  * @author kotani
  */
 #include "Player.h"
-#include "TaskManager\TaskManager.h"
+
 
 Player::Player()
 {

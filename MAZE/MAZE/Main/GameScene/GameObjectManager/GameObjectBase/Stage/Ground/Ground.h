@@ -4,10 +4,10 @@
  * @author kotani
  */
 #ifndef GROUND_H
-#ifndef GROUND_H
+#define GROUND_H
 #include "../../GameObjectBase.h"
 
-class Ground
+class Ground : public GameObjectBase
 {
 public:
 	Ground();

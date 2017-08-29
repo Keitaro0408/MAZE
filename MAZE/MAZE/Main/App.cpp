@@ -8,6 +8,7 @@
 #include "GameScene\GameScene.h"
 #include "TitleScene\TitleScene.h"
 #include "Helper\Helper.h"
+#include "GamePlayManager\GamePlayManager.h"
 
 App::App() :
 ApplicationBase(TEXT("MAZE"), 1920, 1080)
@@ -22,7 +23,7 @@ ApplicationBase(TEXT("MAZE"), 1920, 1080)
 void App::Initialize()
 {
 	SINGLETON_INSTANCE(Lib::Window).ChangeWindowSize(1280,720);
-	
+	SINGLETON_CREATE(GamePlayManager);
 	m_pScene.push_back(new TitleScene());
 	m_pScene.push_back(new GameScene());
 
@@ -39,4 +40,5 @@ void App::Finalize()
 		m_pScene[i]->Finalize();
 		Lib::SafeDelete(m_pScene[i]);
 	}
+	SINGLETON_DELETE(GamePlayManager);
 }

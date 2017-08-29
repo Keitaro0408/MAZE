@@ -5,7 +5,10 @@
  */
 #ifndef STAGE_H
 #define STAGE_H
+#define STAGE_WIDTH 14
+#define STAGE_HEIGHT 14
 #include "..\GameObjectBase.h"
+#include "Ground\Ground.h"
 
 class Stage : public GameObjectBase
 {
@@ -15,6 +18,9 @@ public:
 
 	void Update() override;
 	void Draw() override;
+
+private:
+	Ground* m_pGround;
 
 };
 

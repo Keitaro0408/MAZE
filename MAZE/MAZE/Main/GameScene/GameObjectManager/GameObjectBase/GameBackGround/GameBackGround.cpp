@@ -4,7 +4,6 @@
  * @author kotani
  */
 #include "GameBackGround.h"
-#include "TaskManager\TaskManager.h"
 
 
 GameBackGround::GameBackGround()

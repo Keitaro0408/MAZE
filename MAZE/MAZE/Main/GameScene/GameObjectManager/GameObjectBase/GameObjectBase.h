@@ -6,6 +6,7 @@
 #ifndef GAMEOBJECTBASE_H
 #define GAMEOBJECTBASE_H
 #include "ObjectBase\ObjectBase.h"
+#include "TaskManager\TaskManager.h"
 
 class GameObjectBase : public Lib::ObjectBase
 {

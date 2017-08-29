@@ -8,6 +8,8 @@
 #include "TaskManager\TaskManager.h"
 #include "GameObjectManager\GameObjectManager.h"
 #include "UIObjectManager\UIObjectManager.h"
+#include "..\GamePlayManager\GamePlayManager.h"
+
 
 GameScene::GameScene() :
 SceneBase("GameScene")
@@ -25,6 +27,7 @@ GameScene::~GameScene()
 
 bool GameScene::Initialize()
 {
+	SINGLETON_INSTANCE(GamePlayManager).StageLoad();
 	m_pGameObjectManager = new GameObjectManager();
 	m_pUIObjectManager = new UIObjectManager();
 	return true;
