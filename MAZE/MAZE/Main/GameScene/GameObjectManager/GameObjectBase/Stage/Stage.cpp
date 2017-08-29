@@ -16,7 +16,6 @@ Stage::Stage()
 Stage::~Stage()
 {
 	Lib::SafeDelete(m_pGround);
-	FinalizeTask();
 }
 
 

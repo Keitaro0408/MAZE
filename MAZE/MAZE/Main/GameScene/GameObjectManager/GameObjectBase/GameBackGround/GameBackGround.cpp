@@ -12,7 +12,8 @@
 
 GameBackGround::GameBackGround()
 {
-	InitializeTask();
+	InitializeTask(0, 0);
+
 	m_Uv[0] = Lib::VECTOR2(0, 0);
 	m_Uv[1] = Lib::VECTOR2(1, 0);
 	m_Uv[2] = Lib::VECTOR2(0, 1);
@@ -22,8 +23,7 @@ GameBackGround::GameBackGround()
 		SINGLETON_INSTANCE(Lib::DX11Manager).GetDevice(),
 		SINGLETON_INSTANCE(Lib::DX11Manager).GetDeviceContext(),
 		SINGLETON_INSTANCE(Lib::Window).GetWindowSize());
-	m_pVertex->Initialize(Lib::VECTOR2(1920, 1080),
-		m_Uv);
+	m_pVertex->Initialize(Lib::VECTOR2(1920, 1080),m_Uv);
 	m_pVertex->SetTexture(
 		SINGLETON_INSTANCE(Lib::TextureManager).GetTexture(ResourceId::Game::BACKGROUND_TEX));
 }

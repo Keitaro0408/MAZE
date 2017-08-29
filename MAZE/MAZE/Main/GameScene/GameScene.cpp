@@ -11,6 +11,7 @@
 #include "..\GamePlayManager\GamePlayManager.h"
 #include "Dx11\DX11Manager.h"
 #include "Texture\TextureManager.h"
+#include "DxInput\KeyBoard\KeyDevice.h"
 #include "..\ResourceId.h"
 
 GameScene::GameScene() :
@@ -48,11 +49,11 @@ void GameScene::Finalize()
 	{
 		SINGLETON_INSTANCE(Lib::TextureManager).ReleaseTexture(i);
 	}
-
 }
 
 void GameScene::Execute()
 {
+	SINGLETON_INSTANCE(Lib::KeyDevice).Update();
 	SINGLETON_INSTANCE(Lib::DX11Manager).BeginScene();
 	SINGLETON_INSTANCE(Lib::DX11Manager).SetDepthStencilTest(false);
 	SINGLETON_INSTANCE(Lib::TaskManager).AllExecute();

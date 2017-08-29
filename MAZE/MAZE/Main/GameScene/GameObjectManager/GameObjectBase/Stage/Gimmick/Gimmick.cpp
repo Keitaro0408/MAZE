@@ -8,13 +8,13 @@
 
 Gimmick::Gimmick()
 {
-	InitializeTask(1,1);
+	//InitializeTask(0,0);
 }
 
 
 Gimmick ::~Gimmick()
 {
-	FinalizeTask();
+	//FinalizeTask();
 }
 
 

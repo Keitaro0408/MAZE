@@ -9,6 +9,8 @@
 #include "TitleScene\TitleScene.h"
 #include "Helper\Helper.h"
 #include "GamePlayManager\GamePlayManager.h"
+#include "DxInput\KeyBoard\KeyDevice.h"
+
 
 App::App() :
 ApplicationBase(TEXT("MAZE"), 1920, 1080)
@@ -29,8 +31,13 @@ void App::Initialize()
 
 	SINGLETON_INSTANCE(Lib::SceneManager).AddScene(m_pScene[TITLE_SCENE]);
 	SINGLETON_INSTANCE(Lib::SceneManager).AddScene(m_pScene[GAME_SCENE]);
-
 	SINGLETON_INSTANCE(Lib::SceneManager).ChangeScene("GameScene");
+
+	SINGLETON_INSTANCE(Lib::KeyDevice).KeyCheckEntry("RightMove", DIK_RIGHTARROW);
+	SINGLETON_INSTANCE(Lib::KeyDevice).KeyCheckEntry("LeftMove", DIK_LEFTARROW);
+	SINGLETON_INSTANCE(Lib::KeyDevice).KeyCheckEntry("W", DIK_W);
+	SINGLETON_INSTANCE(Lib::KeyDevice).KeyCheckEntry("A", DIK_A);
+	SINGLETON_INSTANCE(Lib::KeyDevice).KeyCheckEntry("D", DIK_D);
 }
 
 void App::Finalize()

@@ -22,19 +22,19 @@ namespace Lib
 	void TaskManager::AddTask(UpdateTask* _updateTask)
 	{
 		m_UpdateTaskList.push_back(_updateTask);
-		m_UpdateTaskList.sort(std::less<TaskBase*>());
+		m_UpdateTaskList.sort(TaskBase::TaskCmp());
 	}
 
 	void TaskManager::AddTask(DrawTask* _drawTask)
 	{
 		m_DrawTaskList.push_back(_drawTask);
-		m_DrawTaskList.sort(std::less<TaskBase*>());
+		m_DrawTaskList.sort(TaskBase::TaskCmp());
 	}
 
 	void TaskManager::AllExecute()
 	{
-		m_UpdateTaskList.sort(std::less<TaskBase*>());
-		m_DrawTaskList.sort(std::less<TaskBase*>());
+		m_UpdateTaskList.sort(TaskBase::TaskCmp());
+		m_DrawTaskList.sort(TaskBase::TaskCmp());
 
 		for (auto itr : m_UpdateTaskList)
 		{

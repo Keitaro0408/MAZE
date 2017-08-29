@@ -35,6 +35,21 @@ public:
 		return m_SelectStage;
 	}
 
+	void SetIsSpin(bool _isSpin)
+	{
+		m_IsSpin = _isSpin;
+	}
+
+	bool GetIsSpin()
+	{
+		return m_IsSpin;
+	}
+
+	float GetStageAngle()
+	{
+		return m_StageAngle;
+	}
+
 	void StageLoad();
 
 
@@ -44,6 +59,8 @@ private:
 
 	int			 m_StageNum;    //!< 選択されたステージ
 	bool		 m_IsPause;     //!< 停止中か?
+	bool		 m_IsSpin;      //!< 停止中か?
+	float        m_StageAngle;  //!< ステージ角度
 	SELECT_STAGE m_SelectStage; //!< 選択されたステージデータ
 
 };
