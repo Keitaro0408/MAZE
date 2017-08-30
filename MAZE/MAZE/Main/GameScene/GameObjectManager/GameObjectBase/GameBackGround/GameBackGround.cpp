@@ -28,7 +28,6 @@ GameBackGround::GameBackGround()
 		SINGLETON_INSTANCE(Lib::TextureManager).GetTexture(ResourceId::Game::BACKGROUND_TEX));
 }
 
-
 GameBackGround::~GameBackGround()
 {
 	FinalizeTask();

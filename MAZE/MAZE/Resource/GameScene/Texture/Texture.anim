@@ -4,6 +4,33 @@ TextureSize
 	1024
 }
 
+PlayerWait
+{
+	256,
+	64,
+	64,
+	64,
+	0
+}
+
+PlayerLeftFall
+{
+	320,
+	64,
+	64,
+	64,
+	0
+}
+
+PlayerRightFall
+{
+	384,
+	64,
+	64,
+	64,
+	0
+}
+
 PlayerLeftWalk
 {
 	0,
@@ -20,6 +47,15 @@ PlayerRightWalk
 	64,
 	64,
 	4
+}
+
+PlayerLadder
+{
+	256,
+	0,
+	64,
+	64,
+	3
 }
 
 PlayerDoor
@@ -49,7 +85,7 @@ Ground
 	0
 }
 
-TopRudder
+TopLadder
 {
 	64,
 	256,
@@ -58,7 +94,7 @@ TopRudder
 	0
 }
 
-BottomRudder
+BottomLadder
 {
 	128,
 	256,
@@ -67,7 +103,7 @@ BottomRudder
 	0
 }
 
-MiddleRudder
+MiddleLadder
 {
 	192,
 	256,

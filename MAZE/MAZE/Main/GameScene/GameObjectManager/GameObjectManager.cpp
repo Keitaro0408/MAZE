@@ -11,16 +11,11 @@
 
 GameObjectManager::GameObjectManager()
 {
-	m_pGameObjectBase.push_back(new GameBackGround());
-	m_pGameObjectBase.push_back(new Stage());
-	m_pGameObjectBase.push_back(new Player());
+	m_pGameObjectBase[0] = new GameBackGround();
+	m_pGameObjectBase[1] = new Stage();
+	m_pGameObjectBase[2] = new Player();
 }
-
 
 GameObjectManager::~GameObjectManager()
 {
-	for (unsigned i = 0; i < m_pGameObjectBase.size(); i++)
-	{
-		Lib::SafeDelete(m_pGameObjectBase[i]);
-	}
 }

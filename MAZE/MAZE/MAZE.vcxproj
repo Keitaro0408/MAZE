@@ -72,6 +72,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Ladder\Ladder.h" />
     <ClInclude Include="Main\GamePlayManager\GamePlayManager.h" />
     <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Ground\Ground.h" />
     <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectBase\GameObjectBase.h" />
@@ -87,6 +88,7 @@
     <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Gimmick\Gimmick.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Ladder\Ladder.cpp" />
     <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\GameObjectBase.cpp" />
     <ClCompile Include="Main\GamePlayManager\GamePlayManager.cpp" />
     <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Ground\Ground.cpp" />

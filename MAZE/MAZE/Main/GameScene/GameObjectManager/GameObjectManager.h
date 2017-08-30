@@ -5,7 +5,8 @@
  */
 #ifndef OBJECTMANAGER_H
 #define OBJECTMANAGER_H
-#include <vector>
+#include <array>
+#include "SmartPointer\UniquePtr.h"
 
 class GameObjectBase;
 
@@ -16,7 +17,7 @@ public:
 	~GameObjectManager();
 
 private:
-	std::vector<GameObjectBase*> m_pGameObjectBase;
+	std::array<Lib::UniquePtr<GameObjectBase>, 3> m_pGameObjectBase;
 
 };
 

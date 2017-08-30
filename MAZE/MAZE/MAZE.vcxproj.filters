@@ -65,6 +65,9 @@
     <Filter Include="Main\GamePlayManager">
       <UniqueIdentifier>{0d20dc97-4b00-4479-9eb6-2ac5a33baa1d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Ladder">
+      <UniqueIdentifier>{de31d12f-e7f2-47d1-9278-bd11feab6d44}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main\App.cpp">
@@ -102,6 +105,9 @@
     </ClCompile>
     <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\GameObjectBase.cpp">
       <Filter>Main\GameScene\GameObjectManager\GameObjectBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Ladder\Ladder.cpp">
+      <Filter>Main\GameScene\GameObjectManager\GameObjectBase\Stage\Ladder</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -143,6 +149,9 @@
     </ClInclude>
     <ClInclude Include="Main\ResourceId.h">
       <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Ladder\Ladder.h">
+      <Filter>Main\GameScene\GameObjectManager\GameObjectBase\Stage\Ladder</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

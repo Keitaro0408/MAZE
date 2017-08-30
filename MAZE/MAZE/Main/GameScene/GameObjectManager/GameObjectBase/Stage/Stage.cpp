@@ -6,16 +6,54 @@
 #include "Stage.h"
 #include "TaskManager\TaskManager.h"
 #include "Ground\Ground.h"
+#include "Ladder\Ladder.h"
+#include "Window\Window.h"
+#include "Event\EventManager.h"
 
-
-Stage::Stage()
+Stage::Stage() :
+m_SpinSpeed(0.f),
+m_Angle(0.f),
+m_SpinType(NON_SPIN)
 {
-	m_pGround = new Ground();
+	m_Uv[0] = Lib::VECTOR2(0, 0);
+	m_Uv[1] = Lib::VECTOR2(1, 0);
+	m_Uv[2] = Lib::VECTOR2(0, 1);
+	m_Uv[3] = Lib::VECTOR2(1, 1);
+
+	CreateShaderResorceView();
+	
+	m_pGameObjectBase[0] = new Ground();
+	m_pGameObjectBase[1] = new Ladder();
+
+	m_pVertex = new Lib::Vertex2D(
+		SINGLETON_INSTANCE(Lib::DX11Manager).GetDevice(),
+		SINGLETON_INSTANCE(Lib::DX11Manager).GetDeviceContext(),
+		SINGLETON_INSTANCE(Lib::Window).GetWindowSize());
+	m_pVertex->Initialize(Lib::VECTOR2(1920, 1080),
+		m_Uv);
+
+	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("LeftSpin", [this]()
+	{
+		m_SpinType = LEFT_SPIN;
+		m_SpinSpeed = -2;
+	});
+
+	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("RightSpin", [this]()
+	{
+		m_SpinType = RIGHT_SPIN;
+		m_SpinSpeed = 2;
+	});
+
+	InitializeTask(2);
 }
 
 Stage::~Stage()
 {
-	Lib::SafeDelete(m_pGround);
+	FinalizeTask();
+
+	m_pTex->Release();
+	m_pTexRTV->Release();
+	m_pTexSRV->Release();
 }
 
 
@@ -25,8 +63,96 @@ Stage::~Stage()
 
 void Stage::Update()
 {
+	for (unsigned i = 0; i < m_pGameObjectBase.size(); i++)
+	{
+		m_pGameObjectBase[i]->Update();
+	}
+
+	float stageAngle = SINGLETON_INSTANCE(GamePlayManager).GetStageAngle();
+	switch (m_SpinType)
+	{
+	case RIGHT_SPIN:
+		m_Angle += m_SpinSpeed;
+		if (stageAngle < m_Angle)
+		{
+			m_Angle = stageAngle;
+			SINGLETON_INSTANCE(GamePlayManager).SetIsSpin(false);
+		}
+		break;
+	case LEFT_SPIN:
+		m_Angle += m_SpinSpeed;
+		if (stageAngle > m_Angle)
+		{
+			m_Angle = stageAngle;
+			SINGLETON_INSTANCE(GamePlayManager).SetIsSpin(false);
+		}
+		break;
+	case REVERSAL_SPIN:
+		m_Angle += m_SpinSpeed * 2;
+		if (stageAngle < m_Angle)
+		{
+			m_Angle = stageAngle;
+			SINGLETON_INSTANCE(GamePlayManager).SetIsSpin(false);
+		}
+		break;
+	}
 }
 
 void Stage::Draw()
 {
+	Lib::VECTOR2 windowSize;
+	windowSize.x = static_cast<float>(SINGLETON_INSTANCE(Lib::Window).GetWindowSize().right);
+	windowSize.y = static_cast<float>(SINGLETON_INSTANCE(Lib::Window).GetWindowSize().bottom);
+
+	SINGLETON_INSTANCE(Lib::DX11Manager).GetDeviceContext()->OMSetRenderTargets(1, &m_pTexRTV, false);
+	float ClearColor[4] = { 0, 0, 0, 0 };
+	SINGLETON_INSTANCE(Lib::DX11Manager).GetDeviceContext()->ClearRenderTargetView(m_pTexRTV, ClearColor);
+
+	for (unsigned i = 0; i < m_pGameObjectBase.size(); i++)
+	{
+		m_pGameObjectBase[i]->Draw();
+	}
+
+	SINGLETON_INSTANCE(Lib::DX11Manager).SetDepthStencilTest(false);
+	m_pVertex->SetTexture(m_pTexSRV);
+	m_pVertex->Draw(windowSize / 2, m_Uv, 1.f, Lib::VECTOR2(1, 1), m_Angle);
+
+}
+
+
+//----------------------------------------------------------------------------------------------------
+// Private Functions
+//----------------------------------------------------------------------------------------------------
+
+void Stage::CreateShaderResorceView()
+{
+	ID3D11Device* device = SINGLETON_INSTANCE(Lib::DX11Manager).GetDevice();
+
+	//レンダリングターゲットになるテクスチャーを作成
+	D3D11_TEXTURE2D_DESC desc;
+	ZeroMemory(&desc, sizeof(D3D11_TEXTURE2D_DESC));
+	desc.Width = 1920;
+	desc.Height = 1080;
+	desc.MipLevels = 1;
+	desc.ArraySize = 1;
+	desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	desc.SampleDesc.Count = 1;
+	desc.Usage = D3D11_USAGE_DEFAULT;
+	desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	device->CreateTexture2D(&desc, NULL, &m_pTex);
+
+	D3D11_RENDER_TARGET_VIEW_DESC rdesc;
+	ZeroMemory(&rdesc, sizeof(D3D11_RENDER_TARGET_VIEW_DESC));
+	rdesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	rdesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+	rdesc.Texture2DArray.MipSlice = 0;
+	device->CreateRenderTargetView(m_pTex, &rdesc, &m_pTexRTV);
+
+	//SRV作成
+	D3D11_SHADER_RESOURCE_VIEW_DESC SRVDesc;
+	ZeroMemory(&SRVDesc, sizeof(SRVDesc));
+	SRVDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	SRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	SRVDesc.Texture2D.MipLevels = 1;
+	device->CreateShaderResourceView(m_pTex, &SRVDesc, &m_pTexSRV);
 }
