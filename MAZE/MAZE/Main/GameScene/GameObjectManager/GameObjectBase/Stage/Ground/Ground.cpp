@@ -28,6 +28,7 @@ Ground::Ground()
 
 Ground::~Ground()
 {
+	m_pVertex->Finalize();
 }
 
 
@@ -57,7 +58,7 @@ void Ground::Draw()
 		pos.x = static_cast<float>((windowSize.x / 2) - (64 * (STAGE_WIDTH / 2)));
 		for (int j = 0; j < STAGE_WIDTH; j++)
 		{
-			if (m_Stage.Data[i][j] == 1)
+			if ((m_Stage.Data[i][j] % 10) == 1)
 			{
 				m_pVertex->Draw(pos, m_pUvController->GetUV(), 1.f, Lib::VECTOR2(1, 1), 0);
 			}

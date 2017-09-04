@@ -6,6 +6,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include "..\GameObjectBase.h"
+
 #include "SmartPointer\UniquePtr.h"
 #include "Vertex2D\Vertex2D.h"
 #include "Animation\AnimUvController.h"
@@ -37,8 +38,12 @@ private:
 		LEFT_FALL_ANIM,
 		RIGHT_FALL_ANIM,
 		LADDER_UP_DOWN_ANIM,
+		LADDER_DANGLE,
+		DOOR_OPEN,
 		ANIM_MAX
 	};
+
+	void InitializeEvent();
 
 	/**
 	 * アニメーションの読み込み
@@ -66,22 +71,38 @@ private:
 	/**
 	 * 当たり判定
 	 */
-	void CollisionCheck();
+	void CheckCollision();
+
+	/**
+	 * 梯子をつかむことが出来るかチェックする
+	 * @return 掴むことが出来るならtrue
+	 */
+	bool CheckGrabLadder();
+
+	/**
+	 * ギミックに対しての処理
+	 */
+	void GimmickControl();
 
 	typedef std::array<Lib::UniquePtr<Lib::AnimUvController>, ANIM_MAX> UvController;
 
-	UvController					m_pUvController;
-	ANIMATION						m_Animation;
-	Lib::UniquePtr<Lib::Vertex2D>	m_pVertex;
-	Lib::VECTOR2					m_Pos;
-	bool							m_IsRightDir; //!< 右を向いていたらtrue
-	float							m_MoveSpeed;
-									
-	SPIN_TYPE						m_SpinType;
-	float							m_SpinSpeed;
-	float							m_Angle;
-	bool							m_IsSky;
-	float							m_Acceleration;
+	UvController				  m_pUvController;
+	ANIMATION					  m_Animation;
+	Lib::UniquePtr<Lib::Vertex2D> m_pVertex;
+	Lib::VECTOR2				  m_Pos;
+	float						  m_MoveSpeed;
+	float						  m_Scale;
+	float						  m_AddScaleValue;
+	SPIN_TYPE					  m_SpinType;
+	float						  m_SpinSpeed;
+	float						  m_Angle;
+	bool						  m_IsRightDir; //!< 右を向いていたらtrue
+	bool						  m_IsSky;
+	bool						  m_IsStart;
+	bool						  m_UseLadder; //!< 梯子を使っているか?
+	bool						  m_IsDangle;  //!< ぶら下がっているか?
+	bool						  m_DangleEnable; //!< ぶら下がる事が出来るか
+	float						  m_Acceleration;
 
 };
 

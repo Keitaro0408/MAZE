@@ -21,7 +21,12 @@ namespace ResourceId
 		enum Sound
 		{
 			//!< BGM
+			MAIN_BGM,
 			//!< SE
+			START_SE,
+			LANDING_SE,
+			COIN_SE,
+			SOUND_MAX
 		};
 
 		enum Texture

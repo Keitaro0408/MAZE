@@ -58,6 +58,15 @@ PlayerLadder
 	3
 }
 
+LadderDangle
+{
+	192,
+	128,
+	64,
+	64,
+	6
+}
+
 PlayerDoor
 {
 	0,
@@ -67,7 +76,7 @@ PlayerDoor
 	3
 }
 
-Door
+DoorObj
 {
 	0,
 	192,
@@ -111,3 +120,22 @@ MiddleLadder
 	64,
 	0
 }
+
+Number
+{
+	0,
+	320,
+	64,
+	64,
+	10
+}
+
+Coin
+{
+	128,
+	192,
+	64,
+	64,
+	0
+}
+

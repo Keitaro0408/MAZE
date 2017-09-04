@@ -8,6 +8,7 @@
 #define STAGE_WIDTH 15
 #define STAGE_HEIGHT 15
 #include "..\GameObjectBase.h"
+
 #include "Dx11\DX11Manager.h"
 #include "Vertex2D\Vertex2D.h"
 #include "SmartPointer\UniquePtr.h"
@@ -20,12 +21,13 @@ public:
 	{
 		NON_OBJECT,
 		GROUND_OBJECT,
-		SPAWN_OBJECT,
-		GOAL_OBJECT,
+		START_DOOR_OBJECT,
+		GOAL_DOOR_OBJECT,
 		BOTTOM_LADDER_OBJECT,
 		MIDDLE_LADDER_OBJECT,
-		TOP_LADDER_OBJECT,
+		TOP_LADDER_OBJECT
 	};
+
 	Stage();
 	~Stage();
 
@@ -43,7 +45,7 @@ private:
 
 	void CreateShaderResorceView();
 
-	std::array<Lib::UniquePtr<GameObjectBase>,2>  m_pGameObjectBase;
+	std::array<Lib::UniquePtr<GameObjectBase>,3> m_pGameObjectBase;
 	SPIN_TYPE					  m_SpinType;
 	float						  m_SpinSpeed;
 	float						  m_Angle;

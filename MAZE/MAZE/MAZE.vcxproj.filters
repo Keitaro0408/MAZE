@@ -29,30 +29,6 @@
     <Filter Include="Main\GameScene\GameObjectManager\GameObjectBase\Player">
       <UniqueIdentifier>{d5b5fe0d-9189-4238-b251-ae762e9c71d1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Main\GameScene\UIObjectManager\Timer">
-      <UniqueIdentifier>{008ca3e4-78c7-455f-b6cc-a4e731140a26}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Main\GameScene\UIObjectManager\Menu">
-      <UniqueIdentifier>{3aab3ec1-87a7-45db-9d12-fcf2d6bb77e6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Main\GameScene\UIObjectManager\Menu\VolumeBarBase">
-      <UniqueIdentifier>{eaa2b7a1-2e80-4f1f-acb7-3753ad971586}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Main\GameScene\UIObjectManager\Menu\VolumeBarBase\BGMVolumeBar">
-      <UniqueIdentifier>{e0d9b5cb-8c07-44f5-b254-7a7817465692}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Main\GameScene\UIObjectManager\Menu\VolumeBarBase\SEVolumeBar">
-      <UniqueIdentifier>{e34f86d7-a20c-491c-a8d7-995d437567f3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Main\GameScene\UIObjectManager\Menu\ButtonBase">
-      <UniqueIdentifier>{2ae2394d-8ea0-403f-a939-103d70d0d408}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Main\GameScene\UIObjectManager\Menu\ButtonBase\ReturnButton">
-      <UniqueIdentifier>{df5dc356-e57d-410a-a215-9c8600171698}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Main\GameScene\UIObjectManager\Menu\ButtonBase\RetireButton">
-      <UniqueIdentifier>{d77df1c9-7b20-42d3-9a77-d59820b5dd7d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage">
       <UniqueIdentifier>{a5d8d297-a652-4664-b652-c958ca2aea82}</UniqueIdentifier>
     </Filter>
@@ -67,6 +43,36 @@
     </Filter>
     <Filter Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Ladder">
       <UniqueIdentifier>{de31d12f-e7f2-47d1-9278-bd11feab6d44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Door">
+      <UniqueIdentifier>{38226d96-5a13-4481-ba4b-c055f75c193e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\GameScene\UIObjectManager\UIObjectBase">
+      <UniqueIdentifier>{799a8213-eb94-4bfb-9c4c-293fc809571c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\GameScene\UIObjectManager\UIObjectBase\Menu">
+      <UniqueIdentifier>{3aab3ec1-87a7-45db-9d12-fcf2d6bb77e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\GameScene\UIObjectManager\UIObjectBase\Menu\VolumeBarBase">
+      <UniqueIdentifier>{eaa2b7a1-2e80-4f1f-acb7-3753ad971586}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\GameScene\UIObjectManager\UIObjectBase\Menu\VolumeBarBase\BGMVolumeBar">
+      <UniqueIdentifier>{e0d9b5cb-8c07-44f5-b254-7a7817465692}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\GameScene\UIObjectManager\UIObjectBase\Menu\VolumeBarBase\SEVolumeBar">
+      <UniqueIdentifier>{e34f86d7-a20c-491c-a8d7-995d437567f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\GameScene\UIObjectManager\UIObjectBase\Menu\ButtonBase">
+      <UniqueIdentifier>{2ae2394d-8ea0-403f-a939-103d70d0d408}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\GameScene\UIObjectManager\UIObjectBase\Menu\ButtonBase\ReturnButton">
+      <UniqueIdentifier>{df5dc356-e57d-410a-a215-9c8600171698}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\GameScene\UIObjectManager\UIObjectBase\Menu\ButtonBase\RetireButton">
+      <UniqueIdentifier>{d77df1c9-7b20-42d3-9a77-d59820b5dd7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\GameScene\UIObjectManager\UIObjectBase\TimerUI">
+      <UniqueIdentifier>{008ca3e4-78c7-455f-b6cc-a4e731140a26}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -108,6 +114,15 @@
     </ClCompile>
     <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Ladder\Ladder.cpp">
       <Filter>Main\GameScene\GameObjectManager\GameObjectBase\Stage\Ladder</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Door\Door.cpp">
+      <Filter>Main\GameScene\GameObjectManager\GameObjectBase\Stage\Door</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\GameScene\UIObjectManager\UIObjectBase\UIObjectBase.cpp">
+      <Filter>Main\GameScene\UIObjectManager\UIObjectBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\GameScene\UIObjectManager\UIObjectBase\Timer\TimerUI.cpp">
+      <Filter>Main\GameScene\UIObjectManager\UIObjectBase\TimerUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -152,6 +167,15 @@
     </ClInclude>
     <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Ladder\Ladder.h">
       <Filter>Main\GameScene\GameObjectManager\GameObjectBase\Stage\Ladder</Filter>
+    </ClInclude>
+    <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Door\Door.h">
+      <Filter>Main\GameScene\GameObjectManager\GameObjectBase\Stage\Door</Filter>
+    </ClInclude>
+    <ClInclude Include="Main\GameScene\UIObjectManager\UIObjectBase\UIObjectBase.h">
+      <Filter>Main\GameScene\UIObjectManager\UIObjectBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Main\GameScene\UIObjectManager\UIObjectBase\Timer\TimerUI.h">
+      <Filter>Main\GameScene\UIObjectManager\UIObjectBase\TimerUI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

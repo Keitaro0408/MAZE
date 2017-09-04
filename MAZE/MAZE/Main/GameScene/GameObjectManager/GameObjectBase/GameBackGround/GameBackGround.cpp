@@ -31,6 +31,7 @@ GameBackGround::GameBackGround()
 GameBackGround::~GameBackGround()
 {
 	FinalizeTask();
+	m_pVertex->Finalize();
 }
 
 

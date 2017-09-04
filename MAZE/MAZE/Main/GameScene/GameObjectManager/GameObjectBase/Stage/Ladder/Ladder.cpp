@@ -4,9 +4,10 @@
  * @author kotani
  */
 #include "Ladder.h"
+#include "..\..\..\..\..\ResourceId.h"
+
 #include "Window\Window.h"
 #include "Texture\TextureManager.h"
-#include "..\..\..\..\..\ResourceId.h"
 #include "Math\Math.h"
 
 
@@ -35,6 +36,7 @@ Ladder::Ladder()
 
 Ladder::~Ladder()
 {
+	m_pVertex->Finalize();
 }
 
 

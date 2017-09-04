@@ -22,6 +22,8 @@ public:
 	void Execute() override;
 
 private:
+	int				   m_FrameCount;
+	int				   m_BGMSoundDelayFrame; //!< ゲームのBGMを鳴らすのに何秒遅らせるか
 	GameObjectManager* m_pGameObjectManager;
 	UIObjectManager*   m_pUIObjectManager;
 

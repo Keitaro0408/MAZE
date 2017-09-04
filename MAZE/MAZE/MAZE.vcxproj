@@ -72,6 +72,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Door\Door.h" />
     <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Ladder\Ladder.h" />
     <ClInclude Include="Main\GamePlayManager\GamePlayManager.h" />
     <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Ground\Ground.h" />
@@ -80,14 +81,17 @@
     <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectBase\GameBackGround\GameBackGround.h" />
     <ClInclude Include="Main\GameScene\GameScene.h" />
     <ClInclude Include="Main\App.h" />
+    <ClInclude Include="Main\GameScene\UIObjectManager\UIObjectBase\UIObjectBase.h" />
     <ClInclude Include="Main\ResourceId.h" />
     <ClInclude Include="Main\TitleScene\TitleScene.h" />
     <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectManager.h" />
     <ClInclude Include="Main\GameScene\UIObjectManager\UIObjectManager.h" />
     <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Stage.h" />
     <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Gimmick\Gimmick.h" />
+    <ClInclude Include="Main\GameScene\UIObjectManager\UIObjectBase\Timer\TimerUI.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Door\Door.cpp" />
     <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Ladder\Ladder.cpp" />
     <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\GameObjectBase.cpp" />
     <ClCompile Include="Main\GamePlayManager\GamePlayManager.cpp" />
@@ -101,6 +105,8 @@
     <ClCompile Include="Main\GameScene\UIObjectManager\UIObjectManager.cpp" />
     <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Stage.cpp" />
     <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Gimmick\Gimmick.cpp" />
+    <ClCompile Include="Main\GameScene\UIObjectManager\UIObjectBase\Timer\TimerUI.cpp" />
+    <ClCompile Include="Main\GameScene\UIObjectManager\UIObjectBase\UIObjectBase.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

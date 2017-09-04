@@ -4,11 +4,14 @@
  * @author kotani
  */
 #include "Stage.h"
-#include "TaskManager\TaskManager.h"
 #include "Ground\Ground.h"
 #include "Ladder\Ladder.h"
+#include "Door\Door.h"
+
+#include "TaskManager\TaskManager.h"
 #include "Window\Window.h"
 #include "Event\EventManager.h"
+
 
 Stage::Stage() :
 m_SpinSpeed(0.f),
@@ -24,6 +27,7 @@ m_SpinType(NON_SPIN)
 	
 	m_pGameObjectBase[0] = new Ground();
 	m_pGameObjectBase[1] = new Ladder();
+	m_pGameObjectBase[2] = new Door();
 
 	m_pVertex = new Lib::Vertex2D(
 		SINGLETON_INSTANCE(Lib::DX11Manager).GetDevice(),
@@ -50,7 +54,7 @@ m_SpinType(NON_SPIN)
 Stage::~Stage()
 {
 	FinalizeTask();
-
+	m_pVertex->Finalize();
 	m_pTex->Release();
 	m_pTexRTV->Release();
 	m_pTexSRV->Release();
@@ -116,7 +120,6 @@ void Stage::Draw()
 	SINGLETON_INSTANCE(Lib::DX11Manager).SetDepthStencilTest(false);
 	m_pVertex->SetTexture(m_pTexSRV);
 	m_pVertex->Draw(windowSize / 2, m_Uv, 1.f, Lib::VECTOR2(1, 1), m_Angle);
-
 }
 
 
