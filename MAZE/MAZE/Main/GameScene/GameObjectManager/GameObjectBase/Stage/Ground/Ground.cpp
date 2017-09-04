@@ -14,7 +14,7 @@ Ground::Ground()
 	m_Stage = SINGLETON_INSTANCE(GamePlayManager).GetSelectStage();
 
 	m_pUvController = new Lib::AnimUvController();
-	m_pUvController->LoadAnimation("Resource\\GameScene\\Texture\\Texture.anim","Ground");
+	m_pUvController->LoadAnimation("Resource\\GameScene\\Texture\\Texture.anim","GreenGround");
 
 	m_pVertex = new Lib::Vertex2D(
 		SINGLETON_INSTANCE(Lib::DX11Manager).GetDevice(),

@@ -85,7 +85,7 @@ DoorObj
 	2
 }
 
-Ground
+GreenGround
 {
 	0,
 	256,
@@ -94,7 +94,7 @@ Ground
 	0
 }
 
-TopLadder
+BlueGround
 {
 	64,
 	256,
@@ -103,7 +103,7 @@ TopLadder
 	0
 }
 
-BottomLadder
+GreyGround
 {
 	128,
 	256,
@@ -112,9 +112,27 @@ BottomLadder
 	0
 }
 
-MiddleLadder
+TopLadder
 {
 	192,
+	256,
+	64,
+	64,
+	0
+}
+
+BottomLadder
+{
+	256,
+	256,
+	64,
+	64,
+	0
+}
+
+MiddleLadder
+{
+	320,
 	256,
 	64,
 	64,

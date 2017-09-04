@@ -54,6 +54,27 @@ void TimerUI::Update()
 
 void TimerUI::Draw()
 {
+	auto Multiply10 = [](int _num)
+	{
+		int num = 1;
+		for (int i = 0; i < _num; i++)
+		{
+			num *= 10;
+		}
+		return num;
+	};
+
+	auto GetDigit = [](int _num)
+	{
+		int digit = 0;
+		while (_num != 0)
+		{
+			_num /= 10;
+			digit++;
+		}
+		return digit;
+	};
+
 	auto NumDraw = [this](int _num, const Lib::VECTOR2& _pos)
 	{
 		m_pUvController->SetAnimCount(_num);
@@ -61,20 +82,10 @@ void TimerUI::Draw()
 	};
 
 	int num = 0;
-	for (int i = 0; i < 4; i++)
+
+	for (int i = 1; i <= GetDigit(m_Time); i++)
 	{
-		if (i == 0)
-		{
-			num = m_Time % 10;
-			NumDraw(num, Lib::VECTOR2(m_Pos.x - 45 * i, m_Pos.y));
-		}
-		else
-		{
-			num = (m_Time / (i * 10)) % 10;
-			if (num != 0)
-			{
-				NumDraw(num, Lib::VECTOR2(m_Pos.x - 45 * i, m_Pos.y));
-			}
-		}
+		num = (m_Time / Multiply10(i - 1)) % 10;
+		NumDraw(num, Lib::VECTOR2(m_Pos.x - (45 * (i - 1)), m_Pos.y));
 	}
 }

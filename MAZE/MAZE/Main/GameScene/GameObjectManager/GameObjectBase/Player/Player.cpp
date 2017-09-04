@@ -348,23 +348,29 @@ void Player::GimmickControl()
 	}
 
 	// 梯子にななめにぶら下がる処理
-	if (CheckLadder(posArrayX, TopPosArrayY) &&
-		CheckLadder(posArrayX - 1, TopPosArrayY) ||
-		CheckLadder(posArrayX + 1, TopPosArrayY))
+	if (CheckLadder(posArrayX, TopPosArrayY))
 	{
-		if (SINGLETON_INSTANCE(Lib::KeyDevice).AnyMatchKeyCheck("Down", Lib::KEY_PUSH))
+		if (CheckLadder(posArrayX - 1, TopPosArrayY) ||
+			CheckLadder(posArrayX + 1, TopPosArrayY))
 		{
-			m_UseLadder = false;
-			m_DangleEnable = false;
-		}
-		else if (m_DangleEnable && 
-			(stage.Data[posArrayY + 1][posArrayX] % 10) != Stage::GROUND_OBJECT)
-		{
-			m_UseLadder = true;
-			m_IsDangle = true;
-			m_Animation = LADDER_DANGLE;
-			m_pUvController[LADDER_DANGLE]->Control(false, Lib::ANIM_NORMAL);
-			m_Acceleration = 0;
+			if (SINGLETON_INSTANCE(Lib::KeyDevice).AnyMatchKeyCheck("Down", Lib::KEY_PUSH))
+			{
+				m_UseLadder = false;
+				m_DangleEnable = false;
+			}
+			else if (m_DangleEnable && 
+				(stage.Data[posArrayY + 1][posArrayX] % 10) != Stage::GROUND_OBJECT)
+			{
+				m_UseLadder = true;
+				m_IsDangle = true;
+				m_Animation = LADDER_DANGLE;
+				m_pUvController[LADDER_DANGLE]->Control(false, Lib::ANIM_NORMAL);
+				m_Acceleration = 0;
+			}
+			else
+			{
+				m_IsDangle = false;
+			}
 		}
 	}
 	else
@@ -377,7 +383,8 @@ void Player::GimmickControl()
 	{
 		if (!m_IsDangle)
 		{
-			if (stage.Data[TopPosArrayY][posArrayX] == Stage::TOP_LADDER_OBJECT ||
+			if (CheckLadder(posArrayX, TopPosArrayY - 1) &&
+				stage.Data[TopPosArrayY][posArrayX] == Stage::TOP_LADDER_OBJECT ||
 				stage.Data[TopPosArrayY][posArrayX] == Stage::BOTTOM_LADDER_OBJECT)
 			{
 				m_Acceleration = 0;
@@ -386,7 +393,7 @@ void Player::GimmickControl()
 				m_Pos.y -= m_MoveSpeed;
 			}
 			else if (m_UseLadder &&
-				stage.Data[TopPosArrayY][posArrayX] == Stage::MIDDLE_LADDER_OBJECT)
+				CheckLadder(posArrayX, TopPosArrayY))
 			{
 				m_Animation = LADDER_UP_DOWN_ANIM;
 				m_pUvController[LADDER_UP_DOWN_ANIM]->Control(false, Lib::ANIM_LOOP);
@@ -398,9 +405,10 @@ void Player::GimmickControl()
 
 	if (SINGLETON_INSTANCE(Lib::KeyDevice).AnyMatchKeyCheck("Down", Lib::KEY_ON))
 	{
-		if (!m_IsDangle)
+		if (!m_IsDangle && m_DangleEnable)
 		{
-			if (stage.Data[posArrayY][posArrayX] == Stage::TOP_LADDER_OBJECT ||
+			if (CheckLadder(posArrayX, posArrayY + 1) &&
+				stage.Data[posArrayY][posArrayX] == Stage::TOP_LADDER_OBJECT ||
 				stage.Data[posArrayY][posArrayX] == Stage::BOTTOM_LADDER_OBJECT)
 			{
 				m_Acceleration = 0;
@@ -410,7 +418,7 @@ void Player::GimmickControl()
 				m_Animation = LADDER_UP_DOWN_ANIM;
 			}
 			else if (m_UseLadder &&
-				stage.Data[posArrayY][posArrayX] == Stage::MIDDLE_LADDER_OBJECT)
+				CheckLadder(posArrayX, posArrayY))
 			{
 				m_Animation = LADDER_UP_DOWN_ANIM;
 				m_pUvController[LADDER_UP_DOWN_ANIM]->Control(false, Lib::ANIM_LOOP);
