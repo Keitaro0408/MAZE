@@ -4,6 +4,7 @@
  * @author kotani
  */
 #include "TitleScene.h"
+#include "SceneManager\SceneManager.h"
 
 
 TitleScene::TitleScene() :
@@ -23,6 +24,7 @@ TitleScene::~TitleScene()
 
 bool TitleScene::Initialize()
 {
+	SINGLETON_INSTANCE(Lib::SceneManager).ChangeScene("GameScene");
 	return true;
 }
 

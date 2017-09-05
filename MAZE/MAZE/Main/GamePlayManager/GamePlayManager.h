@@ -51,7 +51,7 @@ public:
 	}
 
 	void StageLoad();
-
+	void InitializeEvent();
 
 private:
 	GamePlayManager();

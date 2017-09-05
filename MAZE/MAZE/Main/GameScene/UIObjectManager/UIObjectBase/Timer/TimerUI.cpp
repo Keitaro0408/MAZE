@@ -24,7 +24,7 @@ m_IsStart(false)
 		SINGLETON_INSTANCE(Lib::DX11Manager).GetDevice(),
 		SINGLETON_INSTANCE(Lib::DX11Manager).GetDeviceContext(),
 		SINGLETON_INSTANCE(Lib::Window).GetWindowSize());
-	m_pVertex->Initialize(Lib::VECTOR2(64, 64), m_pUvController->GetUV());
+	m_pVertex->Initialize(Lib::VECTOR2(41, 64), m_pUvController->GetUV());
 	m_pVertex->SetTexture(SINGLETON_INSTANCE(Lib::TextureManager).GetTexture(ResourceId::Game::UNITY_TEX));
 	
 	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("GameStart", [this]()
@@ -86,6 +86,6 @@ void TimerUI::Draw()
 	for (int i = 1; i <= GetDigit(m_Time); i++)
 	{
 		num = (m_Time / Multiply10(i - 1)) % 10;
-		NumDraw(num, Lib::VECTOR2(m_Pos.x - (45 * (i - 1)), m_Pos.y));
+		NumDraw(num, Lib::VECTOR2(m_Pos.x - (41 * (i - 1)), m_Pos.y));
 	}
 }

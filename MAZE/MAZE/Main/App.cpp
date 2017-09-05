@@ -10,6 +10,7 @@
 #include "Helper\Helper.h"
 #include "GamePlayManager\GamePlayManager.h"
 #include "DxInput\KeyBoard\KeyDevice.h"
+#include "Event\EventManager.h"
 
 
 App::App() :

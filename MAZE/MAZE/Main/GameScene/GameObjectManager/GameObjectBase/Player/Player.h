@@ -98,7 +98,8 @@ private:
 	float						  m_Angle;
 	bool						  m_IsRightDir; //!< 右を向いていたらtrue
 	bool						  m_IsSky;
-	bool						  m_IsStart;
+	bool						  m_IsStart; //!< スタート演出中か?
+	bool						  m_IsEnd;   //!< クリア演出中か?
 	bool						  m_UseLadder; //!< 梯子を使っているか?
 	bool						  m_IsDangle;  //!< ぶら下がっているか?
 	bool						  m_DangleEnable; //!< ぶら下がる事が出来るか

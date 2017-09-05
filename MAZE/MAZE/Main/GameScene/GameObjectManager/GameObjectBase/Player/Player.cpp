@@ -13,6 +13,7 @@
 #include "Dx11\DX11Manager.h"
 #include "Texture\TextureManager.h"
 #include "Sound\DSoundManager.h"
+#include "SceneManager\SceneManager.h"
 #include "Window\Window.h"
 
 
@@ -24,9 +25,10 @@ m_Angle(0),
 m_Animation(RIGHT_WALK_ANIM),
 m_IsRightDir(false),
 m_IsStart(false),
+m_IsEnd(false),
 m_IsDangle(false),
 m_DangleEnable(true),
-m_Scale(0.5)
+m_Scale(0.5f)
 {
 	InitializeTask(3, 3);
 
@@ -53,7 +55,6 @@ m_Scale(0.5)
 	InitializeEvent();
 }
 
-
 Player::~Player()
 {
 	m_pVertex->Finalize();
@@ -67,6 +68,40 @@ Player::~Player()
 
 void Player::Update()
 {
+	GamePlayManager::SELECT_STAGE stage;
+	stage = SINGLETON_INSTANCE(GamePlayManager).GetSelectStage();
+	int posArrayX = static_cast<int>((m_Pos.x - 480) / 64);
+	int posArrayY = static_cast<int>((m_Pos.y - 60) / 64);
+
+	// ゴール処理------------------------------------------------------------------------
+	if (stage.Data[posArrayY][posArrayX] == Stage::GOAL_DOOR_OBJECT &&
+		((stage.Data[posArrayY + 1][posArrayX] / 10)) % 10 == 3)
+	{
+		if (!m_IsEnd && 
+			SINGLETON_INSTANCE(Lib::KeyDevice).AnyMatchKeyCheck("Up", Lib::KEY_PUSH))
+		{
+			m_pUvController[DOOR_OPEN]->SetAnimCount(0);
+			SINGLETON_INSTANCE(Lib::EventManager).CallEvent("OpenGoalDoor");
+			m_IsEnd = true;
+			return;
+		}
+		else if (m_IsEnd)
+		{
+			m_Animation = DOOR_OPEN;
+			m_Scale -= m_AddScaleValue;
+			if (m_Scale < 0.5f)
+			{
+				m_Scale = 0.5f;
+			}
+			if (m_pUvController[DOOR_OPEN]->Control(false, Lib::ANIM_NORMAL))
+			{
+				SINGLETON_INSTANCE(Lib::SceneManager).ChangeScene("TitleScene");
+			}
+			return;
+		}
+	}
+	//----------------------------------------------------------------------------------
+
 	if (m_IsStart)
 	{
 		// 回転中ならプレイヤー操作を受け付けない事

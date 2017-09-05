@@ -16,6 +16,7 @@
 #include "Texture\TextureManager.h"
 #include "DxInput\KeyBoard\KeyDevice.h"
 #include "Sound\DSoundManager.h"
+#include "Window\Window.h"
 
 
 GameScene::GameScene() :
@@ -37,6 +38,15 @@ bool GameScene::Initialize()
 {
 	m_FrameCount = 0;
 	int dummy = 0;
+	SINGLETON_CREATE(Lib::EventManager);
+	SINGLETON_CREATE(Lib::TextureManager);
+	SINGLETON_INSTANCE(Lib::TextureManager).
+		Initialize(SINGLETON_INSTANCE(Lib::DX11Manager).GetDevice());
+
+	SINGLETON_CREATE(Lib::DSoundManager);
+	SINGLETON_INSTANCE(Lib::DSoundManager).
+		Initialize(SINGLETON_INSTANCE(Lib::Window).GetWindowHandle());
+
 	SINGLETON_INSTANCE(Lib::TextureManager).Load("Resource\\GameScene\\Texture\\GameBackGround.png", &dummy);
 	SINGLETON_INSTANCE(Lib::TextureManager).Load("Resource\\GameScene\\Texture\\Texture.png", &dummy);
 	SINGLETON_INSTANCE(Lib::DSoundManager).LoadSound("Resource\\GameScene\\Sound\\Main.wav", &dummy);
@@ -44,6 +54,7 @@ bool GameScene::Initialize()
 	SINGLETON_INSTANCE(Lib::DSoundManager).LoadSound("Resource\\GameScene\\Sound\\Landing.wav", &dummy);
 	SINGLETON_INSTANCE(Lib::DSoundManager).LoadSound("Resource\\GameScene\\Sound\\CoinGet.wav", &dummy);
 
+	SINGLETON_INSTANCE(GamePlayManager).InitializeEvent();
 	SINGLETON_INSTANCE(GamePlayManager).StageLoad();
 	m_pGameObjectManager = new GameObjectManager();
 	m_pUIObjectManager = new UIObjectManager();
@@ -63,6 +74,10 @@ void GameScene::Finalize()
 	{
 		SINGLETON_INSTANCE(Lib::DSoundManager).ReleaseSound(i);
 	}
+	SINGLETON_INSTANCE(Lib::DSoundManager).Finalize();
+	SINGLETON_DELETE(Lib::DSoundManager);
+	SINGLETON_DELETE(Lib::TextureManager);
+	SINGLETON_DELETE(Lib::EventManager);
 }
 
 void GameScene::Execute()
