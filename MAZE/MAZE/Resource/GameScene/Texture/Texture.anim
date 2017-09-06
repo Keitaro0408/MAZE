@@ -112,16 +112,7 @@ GreyGround
 	0
 }
 
-TopLadder
-{
-	192,
-	256,
-	64,
-	64,
-	0
-}
-
-BottomLadder
+EndLadder
 {
 	256,
 	256,
@@ -152,6 +143,33 @@ Coin
 {
 	128,
 	192,
+	64,
+	64,
+	0
+}
+
+GreenNeedle
+{
+	0,
+	384,
+	64,
+	64,
+	0
+}
+
+BlueNeedle
+{
+	64,
+	384,
+	64,
+	64,
+	0
+}
+
+Trampoline
+{
+	128,
+	384,
 	64,
 	64,
 	0

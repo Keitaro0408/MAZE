@@ -23,9 +23,8 @@ public:
 private:
 	GamePlayManager::SELECT_STAGE		  m_Stage;
 	Lib::UniquePtr<Lib::Vertex2D>		  m_pVertex;
-	Lib::UniquePtr<Lib::AnimUvController> m_pTopLadderUv;
 	Lib::UniquePtr<Lib::AnimUvController> m_pMiddleLadderUv;
-	Lib::UniquePtr<Lib::AnimUvController> m_pBottomLadderUv;
+	Lib::UniquePtr<Lib::AnimUvController> m_pEndLadderUv;
 };
 
 

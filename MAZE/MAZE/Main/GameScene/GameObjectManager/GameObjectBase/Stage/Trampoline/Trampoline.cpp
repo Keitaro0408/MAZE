@@ -1,36 +1,32 @@
 ﻿/**
- * @file   Ground.cpp
- * @brief  Groundクラスの実装
+ * @file   Trampoline.cpp
+ * @brief  Trampolineクラスの実装
  * @author kotani
  */
-#include "Ground.h"
+#include "Trampoline.h"
 #include "Window\Window.h"
 #include "Texture\TextureManager.h"
 #include "..\..\..\..\..\ResourceId.h"
 #include "Math\Math.h"
 
-Ground::Ground()
+Trampoline::Trampoline()
 {
 	m_Stage = SINGLETON_INSTANCE(GamePlayManager).GetSelectStage();
 
-	m_pGreenUv = new Lib::AnimUvController();
-	m_pGreenUv->LoadAnimation("Resource\\GameScene\\Texture\\Texture.anim", "GreenGround");
-	m_pBlueUv = new Lib::AnimUvController();
-	m_pBlueUv->LoadAnimation("Resource\\GameScene\\Texture\\Texture.anim", "BlueGround");
-	m_pGreyUv = new Lib::AnimUvController();
-	m_pGreyUv->LoadAnimation("Resource\\GameScene\\Texture\\Texture.anim", "GreyGround");
+	m_pUvController = new Lib::AnimUvController();
+	m_pUvController->LoadAnimation("Resource\\GameScene\\Texture\\Texture.anim", "GreenGround");
 
 	m_pVertex = new Lib::Vertex2D(
 		SINGLETON_INSTANCE(Lib::DX11Manager).GetDevice(),
 		SINGLETON_INSTANCE(Lib::DX11Manager).GetDeviceContext(),
 		SINGLETON_INSTANCE(Lib::Window).GetWindowSize());
-	m_pVertex->Initialize(Lib::VECTOR2(64,64),
-		m_pGreenUv->GetUV());
+	m_pVertex->Initialize(Lib::VECTOR2(64, 64),
+		m_pUvController->GetUV());
 	m_pVertex->SetTexture(
 		SINGLETON_INSTANCE(Lib::TextureManager).GetTexture(ResourceId::Game::UNITY_TEX));
 }
 
-Ground::~Ground()
+Trampoline::~Trampoline()
 {
 	m_pVertex->Finalize();
 }
@@ -40,12 +36,12 @@ Ground::~Ground()
 // Public Functions
 //----------------------------------------------------------------------------------------------------
 
-void Ground::Update()
+void Trampoline::Update()
 {
 
 }
 
-void Ground::Draw()
+void Trampoline::Draw()
 {
 	Lib::VECTOR2 pos;
 	Lib::VECTOR2 windowSize;
@@ -55,25 +51,6 @@ void Ground::Draw()
 	pos.x = static_cast<float>((windowSize.x / 2) - (64 * (STAGE_WIDTH / 2)));
 	pos.y = static_cast<float>((windowSize.y / 2) - (64 * (STAGE_HEIGHT / 2)));
 
-	auto GroundDraw = [&](int _x, int _y)
-	{
-		if ((m_Stage.Data[_y][_x] % 10) == Stage::GROUND_OBJECT &&
-			((m_Stage.Data[_y][_x] / 10) % 10) == BLUE)
-		{
-			m_pVertex->Draw(pos, m_pBlueUv->GetUV(), 1.f, Lib::VECTOR2(1, 1), 0);
-		}
-		else if ((m_Stage.Data[_y][_x] % 10) == Stage::GROUND_OBJECT &&
-			((m_Stage.Data[_y][_x] / 10) % 10) == GREEN)
-		{
-			m_pVertex->Draw(pos, m_pGreenUv->GetUV(), 1.f, Lib::VECTOR2(1, 1), 0);
-		}
-		else if ((m_Stage.Data[_y][_x] % 10) == Stage::GROUND_OBJECT &&
-			((m_Stage.Data[_y][_x] / 10) % 10) == GREY)
-		{
-			m_pVertex->Draw(pos, m_pGreyUv->GetUV(), 1.f, Lib::VECTOR2(1, 1), 0);
-		}
-	};
-
 	m_pVertex->SetTexture(
 		SINGLETON_INSTANCE(Lib::TextureManager).GetTexture(ResourceId::Game::UNITY_TEX));
 	for (int i = 0; i < STAGE_HEIGHT; i++)
@@ -81,7 +58,6 @@ void Ground::Draw()
 		pos.x = static_cast<float>((windowSize.x / 2) - (64 * (STAGE_WIDTH / 2)));
 		for (int j = 0; j < STAGE_WIDTH; j++)
 		{
-			GroundDraw(j,i);
 			pos.x += 64.f;
 		}
 		pos.y += 64.f;

@@ -9,12 +9,45 @@
 
 
 GamePlayManager::GamePlayManager() :
-m_StageNum(11),
+m_StageNum(10),
 m_StageAngle(0.f),
 m_IsSpin(false)
 {
 }
 
+bool GamePlayManager::CheckEnableGimmick(int _x, int _y)
+{
+	if (((m_SelectStage.Data[_y][_x] / 10) % 10) == 0 &&
+		m_StageAngle == 0)
+	{
+		return true;
+	}
+	else if (((m_SelectStage.Data[_y][_x] / 10) % 10) == 1)
+	{
+		if (m_StageAngle == -90 ||
+			m_StageAngle == 270)
+		{
+			return true;
+		}
+	}
+	else if (((m_SelectStage.Data[_y][_x] / 10) % 10) == 2)
+	{
+		if (m_StageAngle == 180 ||
+			m_StageAngle == -180)
+		{ 
+			return true;
+		}
+	}
+	else if (((m_SelectStage.Data[_y][_x] / 10) % 10) == 3)
+	{
+		if (m_StageAngle == 90 ||
+			m_StageAngle == -270)
+		{
+			return true;
+		}
+	}
+	return false;
+}
 
 void GamePlayManager::StageLoad()
 {
@@ -35,6 +68,32 @@ void GamePlayManager::StageLoad()
 	fclose(fp);
 }
 
+GamePlayManager::SELECT_STAGE GamePlayManager::LeftSpin(const SELECT_STAGE& _stage)
+{
+	SELECT_STAGE Stage;
+	for (int i = 0; i < STAGE_HEIGHT; i++)
+	{
+		for (int j = 0; j < STAGE_WIDTH; j++)
+		{
+			Stage.Data[STAGE_WIDTH - i - 1][j] = _stage.Data[j][i];
+		}
+	}
+	return Stage;
+}
+
+GamePlayManager::SELECT_STAGE GamePlayManager::RightSpin(const SELECT_STAGE& _stage)
+{
+	SELECT_STAGE Stage;
+	for (int i = 0; i < STAGE_HEIGHT; i++)
+	{
+		for (int j = 0; j < STAGE_WIDTH; j++)
+		{
+			Stage.Data[i][STAGE_WIDTH - j - 1] = _stage.Data[j][i];
+		}
+	}
+	return Stage;
+}
+
 void GamePlayManager::InitializeEvent()
 {
 	m_StageAngle = 0.f;
@@ -46,57 +105,35 @@ void GamePlayManager::InitializeEvent()
 		}
 	}
 
+	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("PlayerRespawn", [this]()
+	{
+		StageLoad();
+		m_StageAngle = 0;
+		m_IsSpin = true;
+	});
+
 	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("LeftSpin", [this]()
 	{
 		m_IsSpin = true;
 		m_StageAngle -= 90.f;
-
-		SELECT_STAGE Stage = m_SelectStage;
-		for (int i = 0; i < STAGE_HEIGHT; i++)
+		if (m_StageAngle <= -360 ||
+			m_StageAngle >= 360)
 		{
-			for (int j = 0; j < STAGE_WIDTH; j++)
-			{
-				m_SelectStage.Data[STAGE_WIDTH - i - 1][j] = Stage.Data[j][i];
-			}
+			m_StageAngle = 0;
 		}
+		m_SelectStage = LeftSpin(m_SelectStage);
 	});
 
 	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("RightSpin", [this]()
 	{
 		m_IsSpin = true;
 		m_StageAngle += 90.f;
-
-		SELECT_STAGE Stage = m_SelectStage;
-		for (int i = 0; i < STAGE_HEIGHT; i++)
+		if (m_StageAngle <= -360 ||
+			m_StageAngle >= 360)
 		{
-			for (int j = 0; j < STAGE_WIDTH; j++)
-			{
-				m_SelectStage.Data[i][STAGE_WIDTH - j - 1] = Stage.Data[j][i];
-			}
-		}
-	});
-
-	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("ReversalSpin", [this]()
-	{
-		m_IsSpin = true;
-		m_StageAngle += 180.f;
-		SELECT_STAGE Stage = m_SelectStage;
-
-		for (int i = 0; i < STAGE_HEIGHT; i++)
-		{
-			for (int j = 0; j < STAGE_WIDTH; j++)
-			{
-				m_SelectStage.Data[i][STAGE_WIDTH - j - 1] = Stage.Data[j][i];
-			}
+			m_StageAngle = 0;
 		}
 
-		Stage = m_SelectStage;
-		for (int i = 0; i < STAGE_HEIGHT; i++)
-		{
-			for (int j = 0; j < STAGE_WIDTH; j++)
-			{
-				m_SelectStage.Data[i][STAGE_WIDTH - j - 1] = Stage.Data[j][i];
-			}
-		}
+		m_SelectStage = RightSpin(m_SelectStage);
 	});
 }

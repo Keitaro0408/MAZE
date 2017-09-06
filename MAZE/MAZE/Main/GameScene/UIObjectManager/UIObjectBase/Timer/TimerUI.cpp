@@ -14,7 +14,7 @@
 
 TimerUI::TimerUI() :
 m_Pos(Lib::VECTOR2(1700,120)),
-m_Time(0),
+m_Time(300),
 m_Count(0),
 m_IsStart(false)
 {
@@ -32,6 +32,11 @@ m_IsStart(false)
 		m_IsStart = true;
 	});
 
+	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("CoinGet", [this]()
+	{
+		m_Time += 5;
+	});
+
 	InitializeTask();
 }
 
@@ -46,7 +51,7 @@ void TimerUI::Update()
 	if (!m_IsStart) return;
 	if (m_Count == 60)
 	{
-		m_Time++;
+		m_Time--;
 		m_Count = 0;
 	}
 	m_Count++;

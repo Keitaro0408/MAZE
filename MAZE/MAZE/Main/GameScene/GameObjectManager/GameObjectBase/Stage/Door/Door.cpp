@@ -56,19 +56,40 @@ void Door::Draw()
 	pos.x = static_cast<float>((windowSize.x / 2) - (64 * (STAGE_WIDTH / 2)));
 	pos.y = static_cast<float>((windowSize.y / 2) - (64 * (STAGE_HEIGHT / 2)));
 
+	auto DoorDraw = [&](int _x, int _y)
+	{
+		if (m_Stage.Data[_y][_x] == Stage::START_DOOR_OBJECT)
+		{
+			m_pVertex->Draw(pos, m_pStartDoorUv->GetUV(), 1.f, Lib::VECTOR2(1, 1));
+		}
+		else if ((m_Stage.Data[_y][_x] % 10) == Stage::GOAL_DOOR_OBJECT &&
+			((m_Stage.Data[_y][_x] / 10) % 10) == 0)
+		{
+			m_pVertex->Draw(pos, m_pGoalDoorUv->GetUV(), 1.f, Lib::VECTOR2(1, 1));
+		}
+		else if ((m_Stage.Data[_y][_x] % 10) == Stage::GOAL_DOOR_OBJECT &&
+			((m_Stage.Data[_y][_x] / 10) % 10) == 1)
+		{
+			m_pVertex->Draw(pos, m_pGoalDoorUv->GetUV(), 1.f, Lib::VECTOR2(1, 1), 90);
+		}
+		else if ((m_Stage.Data[_y][_x] % 10) == Stage::GOAL_DOOR_OBJECT &&
+			((m_Stage.Data[_y][_x] / 10) % 10) == 2)
+		{
+			m_pVertex->Draw(pos, m_pGoalDoorUv->GetUV(), 1.f, Lib::VECTOR2(1, 1), 180);
+		}
+		else if ((m_Stage.Data[_y][_x] % 10) == Stage::GOAL_DOOR_OBJECT &&
+			((m_Stage.Data[_y][_x] / 10) % 10) == 3)
+		{
+			m_pVertex->Draw(pos, m_pGoalDoorUv->GetUV(), 1.f, Lib::VECTOR2(1, 1), -90);
+		}
+	};
+
 	for (int i = 0; i < STAGE_HEIGHT; i++)
 	{
 		pos.x = static_cast<float>((windowSize.x / 2) - (64 * (STAGE_WIDTH / 2)));
 		for (int j = 0; j < STAGE_WIDTH; j++)
 		{
-			if (m_Stage.Data[i][j] == Stage::START_DOOR_OBJECT)
-			{
-				m_pVertex->Draw(pos, m_pStartDoorUv->GetUV(), 1.f, Lib::VECTOR2(1, 1), 0);
-			}
-			else if (m_Stage.Data[i][j] == Stage::GOAL_DOOR_OBJECT)
-			{
-				m_pVertex->Draw(pos, m_pGoalDoorUv->GetUV(), 1.f, Lib::VECTOR2(1, 1), 0);
-			}
+			DoorDraw(j,i);
 			pos.x += 64.f;
 		}
 		pos.y += 64.f;

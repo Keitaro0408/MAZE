@@ -35,6 +35,11 @@ public:
 		return m_SelectStage;
 	}
 
+	void SetSelectStage(const SELECT_STAGE& _stage)
+	{
+		m_SelectStage = _stage;
+	}
+
 	void SetIsSpin(bool _isSpin)
 	{
 		m_IsSpin = _isSpin;
@@ -50,6 +55,10 @@ public:
 		return m_StageAngle;
 	}
 
+	SELECT_STAGE LeftSpin(const SELECT_STAGE& _stage);
+	SELECT_STAGE RightSpin(const SELECT_STAGE& _stage);
+
+	bool CheckEnableGimmick(int _x, int _y);
 	void StageLoad();
 	void InitializeEvent();
 

@@ -28,6 +28,7 @@ m_IsStart(false),
 m_IsEnd(false),
 m_IsDangle(false),
 m_DangleEnable(true),
+m_FrameCount(180),
 m_Scale(0.5f)
 {
 	InitializeTask(3, 3);
@@ -52,6 +53,7 @@ m_Scale(0.5f)
 		SINGLETON_INSTANCE(Lib::TextureManager).GetTexture(ResourceId::Game::UNITY_TEX));
 	SetStartPos();
 
+	pUpdate = &Player::StartUpdate;
 	InitializeEvent();
 }
 
@@ -68,16 +70,60 @@ Player::~Player()
 
 void Player::Update()
 {
+	(this->*pUpdate)();
+}
+
+void Player::Draw()
+{
+	SINGLETON_INSTANCE(Lib::DX11Manager).SetDepthStencilTest(false);
+	m_pVertex->SetTexture(
+		SINGLETON_INSTANCE(Lib::TextureManager).GetTexture(ResourceId::Game::UNITY_TEX));
+
+	if (m_FrameCount >= 180)
+	{
+		m_pVertex->Draw(m_Pos, m_pUvController[m_Animation]->GetUV(),1.f,Lib::VECTOR2(m_Scale,m_Scale));
+	}
+}
+
+
+//----------------------------------------------------------------------------------------------------
+// Private Functions
+//----------------------------------------------------------------------------------------------------
+
+void Player::StartUpdate()
+{
+	if (m_Scale < 1.f)
+	{
+		SINGLETON_INSTANCE(Lib::EventManager).CallEvent("OpenStartDoor");
+		m_Scale += m_AddScaleValue;
+	}
+	m_pUvController[DOOR_OPEN]->Control(false, Lib::ANIM_NORMAL);
+
+	if (m_IsStart)
+	{
+		pUpdate = &Player::NormalUpdate;
+	}
+}
+
+void Player::NormalUpdate()
+{
+	// 回転中ならプレイヤー操作を受け付けない
+	if (SINGLETON_INSTANCE(GamePlayManager).GetIsSpin())
+	{
+		StageSpinUpdate();
+		return;
+	}
+
 	GamePlayManager::SELECT_STAGE stage;
 	stage = SINGLETON_INSTANCE(GamePlayManager).GetSelectStage();
 	int posArrayX = static_cast<int>((m_Pos.x - 480) / 64);
 	int posArrayY = static_cast<int>((m_Pos.y - 60) / 64);
 
 	// ゴール処理------------------------------------------------------------------------
-	if (stage.Data[posArrayY][posArrayX] == Stage::GOAL_DOOR_OBJECT &&
-		((stage.Data[posArrayY + 1][posArrayX] / 10)) % 10 == 3)
+	if ((stage.Data[posArrayY][posArrayX] % 10) == Stage::GOAL_DOOR_OBJECT &&
+		SINGLETON_INSTANCE(GamePlayManager).CheckEnableGimmick(posArrayX, posArrayY))
 	{
-		if (!m_IsEnd && 
+		if (!m_IsEnd &&
 			SINGLETON_INSTANCE(Lib::KeyDevice).AnyMatchKeyCheck("Up", Lib::KEY_PUSH))
 		{
 			m_pUvController[DOOR_OPEN]->SetAnimCount(0);
@@ -102,56 +148,43 @@ void Player::Update()
 	}
 	//----------------------------------------------------------------------------------
 
-	if (m_IsStart)
+	MoveUpdate();
+
+	if (SINGLETON_INSTANCE(Lib::KeyDevice).AnyMatchKeyCheck("A", Lib::KEY_PUSH) &&
+		!m_IsSky)
 	{
-		// 回転中ならプレイヤー操作を受け付けない事
-		if (SINGLETON_INSTANCE(GamePlayManager).GetIsSpin())
-		{
-			StageSpinUpdate();
-			return;
-		}
-
-		MoveUpdate();
-
-		if (SINGLETON_INSTANCE(Lib::KeyDevice).AnyMatchKeyCheck("A", Lib::KEY_PUSH))
-		{
-			SINGLETON_INSTANCE(Lib::EventManager).CallEvent("LeftSpin");
-		}
-
-		if (SINGLETON_INSTANCE(Lib::KeyDevice).AnyMatchKeyCheck("D", Lib::KEY_PUSH))
-		{
-			SINGLETON_INSTANCE(Lib::EventManager).CallEvent("RightSpin");
-		}
-
-		CheckCollision();
+		SINGLETON_INSTANCE(Lib::EventManager).CallEvent("LeftSpin");
 	}
-	else 
+
+	if (SINGLETON_INSTANCE(Lib::KeyDevice).AnyMatchKeyCheck("D", Lib::KEY_PUSH) &&
+		!m_IsSky)
 	{
-		if (m_Scale < 1.f)
-		{
-			SINGLETON_INSTANCE(Lib::EventManager).CallEvent("OpenStartDoor");
-			m_Scale += m_AddScaleValue;
-		}
-		if (m_pUvController[DOOR_OPEN]->Control(false, Lib::ANIM_NORMAL))
-		{
-			SINGLETON_INSTANCE(Lib::EventManager).CallEvent("CloseStartDoor");
-		}
+		SINGLETON_INSTANCE(Lib::EventManager).CallEvent("RightSpin");
 	}
+
+	CheckCollision();
 }
 
-void Player::Draw()
+void Player::RespawnUpdate()
 {
-	SINGLETON_INSTANCE(Lib::DX11Manager).SetDepthStencilTest(false);
-	m_pVertex->SetTexture(
-		SINGLETON_INSTANCE(Lib::TextureManager).GetTexture(ResourceId::Game::UNITY_TEX));
+	m_FrameCount++;
+	SetStartPos();
+	if (m_FrameCount < 180) return;
 
-	m_pVertex->Draw(m_Pos, m_pUvController[m_Animation]->GetUV(),1.f,Lib::VECTOR2(m_Scale,m_Scale));
+	m_Animation = DOOR_OPEN;
+
+	if (m_Scale < 1.f)
+	{
+		SINGLETON_INSTANCE(Lib::EventManager).CallEvent("OpenStartDoor");
+		m_Scale += m_AddScaleValue;
+	}
+	else
+	{
+		pUpdate = &Player::NormalUpdate;
+	}
+
+	m_pUvController[DOOR_OPEN]->Control(false, Lib::ANIM_NORMAL);
 }
-
-
-//----------------------------------------------------------------------------------------------------
-// Private Functions
-//----------------------------------------------------------------------------------------------------
 
 void Player::InitializeEvent()
 {
@@ -159,6 +192,7 @@ void Player::InitializeEvent()
 	{
 		int posArrayX = static_cast<int>((m_Pos.x - 480) / 64);
 		int posArrayY = static_cast<int>((m_Pos.y - 60) / 64);
+		m_Angle = 0;
 
 		m_Pos.x = static_cast<float>((posArrayX * 64 + 480) + 32);
 		m_Pos.y = static_cast<float>((posArrayY * 64 + 60) + 32);
@@ -170,6 +204,8 @@ void Player::InitializeEvent()
 	{
 		int posArrayX = static_cast<int>((m_Pos.x - 480) / 64);
 		int posArrayY = static_cast<int>((m_Pos.y - 60) / 64);
+		m_Angle = 0;
+
 		m_Pos.x = static_cast<float>((posArrayX * 64 + 480) + 32);
 		m_Pos.y = static_cast<float>((posArrayY * 64 + 60) + 32);
 		m_SpinType = RIGHT_SPIN;
@@ -231,10 +267,46 @@ void Player::StageSpinUpdate()
 	m_Pos.x = cx + dinstance * cos(Lib::Math::ToRadian(m_SpinSpeed + angle));
 	m_Pos.y = cy + dinstance * sin(Lib::Math::ToRadian(m_SpinSpeed + angle));
 	m_Angle += m_SpinSpeed;
-	if (m_Angle >= 90.f)
+
+	GamePlayManager::SELECT_STAGE stage = SINGLETON_INSTANCE(GamePlayManager).GetSelectStage();
+
+	int posArrayX = static_cast<int>((m_Pos.x - 480) / 64);
+	int posArrayY = static_cast<int>((m_Pos.y - 60) / 64);
+	auto CheckLadder = [&](int _x, int _y)
 	{
-		m_Pos.x;
-		m_Pos.y;
+		if (stage.Data[_y][_x] == Stage::END_LADDER_OBJECT ||
+			stage.Data[_y][_x] == Stage::LADDER_OBJECT)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	};
+
+	if (abs(m_Angle) >= 90.f - abs(m_SpinSpeed))
+	{
+		m_pUvController[LADDER_DANGLE]->SetAnimCount(0);
+		if (CheckLadder(posArrayX, posArrayY))
+		{
+			m_pUvController[LADDER_UP_DOWN_ANIM]->Control(false, Lib::ANIM_LOOP);
+			m_UseLadder = true;
+			m_Animation = LADDER_UP_DOWN_ANIM;
+			if (CheckLadder(posArrayX - 1, posArrayY) ||
+				CheckLadder(posArrayX + 1, posArrayY))
+			{
+				if (m_DangleEnable &&
+					(stage.Data[posArrayY + 1][posArrayX] % 10) != Stage::GROUND_OBJECT)
+				{
+					m_UseLadder = true;
+					m_IsDangle = true;
+					m_Animation = LADDER_DANGLE;
+					m_pUvController[LADDER_DANGLE]->Control(false, Lib::ANIM_NORMAL);
+					m_Pos.y += 32.f;
+				}
+			}
+		}
 	}
 }
 
@@ -296,7 +368,6 @@ void Player::CheckCollision()
 	int posArrayY = static_cast<int>((m_Pos.y - 60) / 64);
 	int bottomPosArrayY = static_cast<int>((m_Pos.y - 60 + 32) / 64);
 	
-	// GROUND_OBJECTには2桁目にドアの方向が入っている事もある
 	if ((stage.Data[posArrayY][leftPosArrayX] % 10) == Stage::GROUND_OBJECT)
 	{
 		m_Pos.x += m_MoveSpeed;
@@ -304,6 +375,13 @@ void Player::CheckCollision()
 	else if ((stage.Data[posArrayY][rightPosArrayX] % 10) == Stage::GROUND_OBJECT)
 	{
 		m_Pos.x -= m_MoveSpeed;
+	}
+	else if (stage.Data[posArrayY][posArrayX] == Stage::COIN_OBJECT)
+	{
+		GamePlayManager::SELECT_STAGE tmpStage = stage;
+		tmpStage.Data[posArrayY][posArrayX] = 0;
+		SINGLETON_INSTANCE(GamePlayManager).SetSelectStage(tmpStage);
+		SINGLETON_INSTANCE(Lib::EventManager).CallEvent("CoinGet");
 	}
 
 	if ((stage.Data[bottomPosArrayY][rightPosArrayX] % 10) != Stage::GROUND_OBJECT &&
@@ -347,6 +425,17 @@ void Player::CheckCollision()
 		m_UseLadder = false;
 		m_Acceleration = 0;
 	}
+
+	if ((stage.Data[posArrayY][posArrayX] % 10) == Stage::NEEDLE_OBJECT &&
+		SINGLETON_INSTANCE(GamePlayManager).CheckEnableGimmick(posArrayX, bottomPosArrayY))
+	{
+		m_Scale = 0.5;
+		SINGLETON_INSTANCE(Lib::EventManager).CallEvent("PlayerRespawn");
+		m_pUvController[DOOR_OPEN]->SetAnimCount(0);
+		m_FrameCount = 0;
+		pUpdate = &Player::RespawnUpdate;
+	}
+
 	GimmickControl();
 }
 
@@ -365,9 +454,8 @@ void Player::GimmickControl()
 
 	auto CheckLadder = [&](int _x, int _y)
 	{
-		if (stage.Data[_y][_x] == Stage::BOTTOM_LADDER_OBJECT ||
-			stage.Data[_y][_x] == Stage::MIDDLE_LADDER_OBJECT ||
-			stage.Data[_y][_x] == Stage::TOP_LADDER_OBJECT)
+		if (stage.Data[_y][_x] == Stage::END_LADDER_OBJECT ||
+			stage.Data[_y][_x] == Stage::LADDER_OBJECT)
 		{
 			return true;
 		}
@@ -419,8 +507,8 @@ void Player::GimmickControl()
 		if (!m_IsDangle)
 		{
 			if (CheckLadder(posArrayX, TopPosArrayY - 1) &&
-				stage.Data[TopPosArrayY][posArrayX] == Stage::TOP_LADDER_OBJECT ||
-				stage.Data[TopPosArrayY][posArrayX] == Stage::BOTTOM_LADDER_OBJECT)
+				stage.Data[TopPosArrayY][posArrayX] == Stage::LADDER_OBJECT ||
+				stage.Data[TopPosArrayY][posArrayX] == Stage::END_LADDER_OBJECT)
 			{
 				m_Acceleration = 0;
 				m_pUvController[LADDER_UP_DOWN_ANIM]->Control(false, Lib::ANIM_LOOP);
@@ -443,8 +531,8 @@ void Player::GimmickControl()
 		if (!m_IsDangle && m_DangleEnable)
 		{
 			if (CheckLadder(posArrayX, posArrayY + 1) &&
-				stage.Data[posArrayY][posArrayX] == Stage::TOP_LADDER_OBJECT ||
-				stage.Data[posArrayY][posArrayX] == Stage::BOTTOM_LADDER_OBJECT)
+				stage.Data[posArrayY][posArrayX] == Stage::LADDER_OBJECT ||
+				stage.Data[posArrayY][posArrayX] == Stage::END_LADDER_OBJECT)
 			{
 				m_Acceleration = 0;
 				m_pUvController[LADDER_UP_DOWN_ANIM]->Control(false, Lib::ANIM_LOOP);

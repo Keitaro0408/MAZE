@@ -1,40 +1,33 @@
 ﻿/**
- * @file   Ground.h
- * @brief  Groundクラスのヘッダファイル
+ * @file   Needle.h
+ * @brief  Needleクラスのヘッダファイル
  * @author kotani
  */
-#ifndef GROUND_H
-#define GROUND_H
+#ifndef NEEDLE_H
+#define NEEDLE_H
 #include "..\..\GameObjectBase.h"
 #include "..\..\..\..\..\GamePlayManager\GamePlayManager.h"
 #include "Vertex2D\Vertex2D.h"
 #include "Animation\AnimUvController.h"
 #include "SmartPointer\UniquePtr.h"
 
-class Ground : public GameObjectBase
+class Needle : public GameObjectBase
 {
 public:
-
-	Ground();
-	virtual ~Ground();
+	Needle();
+	virtual ~Needle();
 
 	void Update() override;
 	void Draw() override;
 
 private:
-	enum COLOR
-	{
-		GREEN,
-		BLUE,
-		GREY
-	};
 	GamePlayManager::SELECT_STAGE		  m_Stage;
 	Lib::UniquePtr<Lib::Vertex2D>		  m_pVertex;
-	Lib::UniquePtr<Lib::AnimUvController> m_pGreenUv;
-	Lib::UniquePtr<Lib::AnimUvController> m_pBlueUv;
-	Lib::UniquePtr<Lib::AnimUvController> m_pGreyUv;
+	Lib::UniquePtr<Lib::AnimUvController> m_pGreenNeedle;
+	Lib::UniquePtr<Lib::AnimUvController> m_pBlueNeedle;
 
 };
 
 
 #endif
+

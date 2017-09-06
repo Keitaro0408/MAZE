@@ -7,6 +7,10 @@
 #include "Ground\Ground.h"
 #include "Ladder\Ladder.h"
 #include "Door\Door.h"
+#include "Needle\Needle.h"
+#include "Coin\Coin.h"
+#include "Cover\Cover.h"
+#include "Trampoline\Trampoline.h"
 
 #include "TaskManager\TaskManager.h"
 #include "Window\Window.h"
@@ -28,6 +32,10 @@ m_SpinType(NON_SPIN)
 	m_pGameObjectBase[0] = new Ground();
 	m_pGameObjectBase[1] = new Ladder();
 	m_pGameObjectBase[2] = new Door();
+	m_pGameObjectBase[3] = new Needle();
+	m_pGameObjectBase[4] = new Coin();
+	m_pGameObjectBase[5] = new Cover();
+	m_pGameObjectBase[6] = new Trampoline();
 
 	m_pVertex = new Lib::Vertex2D(
 		SINGLETON_INSTANCE(Lib::DX11Manager).GetDevice(),
@@ -46,6 +54,12 @@ m_SpinType(NON_SPIN)
 	{
 		m_SpinType = RIGHT_SPIN;
 		m_SpinSpeed = 2;
+	});
+
+	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("PlayerRespawn", [this]()
+	{
+		m_SpinType = INITIALIZE_SPIN;
+		m_SpinSpeed = 4;
 	});
 
 	InitializeTask(2);
@@ -71,13 +85,20 @@ void Stage::Update()
 	{
 		m_pGameObjectBase[i]->Update();
 	}
+	if (!SINGLETON_INSTANCE(GamePlayManager).GetIsSpin()) return;
 
 	float stageAngle = SINGLETON_INSTANCE(GamePlayManager).GetStageAngle();
+	if (m_Angle <= -360 ||
+		m_Angle >= 360)
+	{
+		m_Angle = 0;
+	}
+
 	switch (m_SpinType)
 	{
 	case RIGHT_SPIN:
 		m_Angle += m_SpinSpeed;
-		if (stageAngle < m_Angle)
+		if ((static_cast<int>(m_Angle) % 90) == 0)
 		{
 			m_Angle = stageAngle;
 			SINGLETON_INSTANCE(GamePlayManager).SetIsSpin(false);
@@ -85,17 +106,19 @@ void Stage::Update()
 		break;
 	case LEFT_SPIN:
 		m_Angle += m_SpinSpeed;
-		if (stageAngle > m_Angle)
+		if ((static_cast<int>(m_Angle) % 90) == 0)
 		{
 			m_Angle = stageAngle;
 			SINGLETON_INSTANCE(GamePlayManager).SetIsSpin(false);
 		}
 		break;
-	case REVERSAL_SPIN:
-		m_Angle += m_SpinSpeed * 2;
-		if (stageAngle < m_Angle)
-		{
-			m_Angle = stageAngle;
+	case INITIALIZE_SPIN:
+		float tmpAngle = m_Angle;
+		m_Angle += m_SpinSpeed;
+		if (m_Angle >= 0 && tmpAngle <= 0 || 
+			m_Angle <= 0 && tmpAngle >= 0)
+		{	
+			m_Angle = 0;
 			SINGLETON_INSTANCE(GamePlayManager).SetIsSpin(false);
 		}
 		break;

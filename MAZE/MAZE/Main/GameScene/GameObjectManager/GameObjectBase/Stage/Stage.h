@@ -17,15 +17,19 @@
 class Stage : public GameObjectBase
 {
 public:
+	// 方向をもつオブジェクトの地面についている方向
 	enum STAGE_OBJECT
 	{
 		NON_OBJECT,
 		GROUND_OBJECT,
 		START_DOOR_OBJECT,
 		GOAL_DOOR_OBJECT,
-		BOTTOM_LADDER_OBJECT,
-		MIDDLE_LADDER_OBJECT,
-		TOP_LADDER_OBJECT
+		END_LADDER_OBJECT,
+		LADDER_OBJECT,
+		NEEDLE_OBJECT,
+		TRAMPOLINE_OBJECT,
+		COVER_OBJECT,
+		COIN_OBJECT
 	};
 
 	Stage();
@@ -34,18 +38,20 @@ public:
 	void Update() override;
 	void Draw() override;
 
+
 private:
+	typedef std::array<Lib::UniquePtr<GameObjectBase>, 7> GameObject;
 	enum SPIN_TYPE
 	{
 		LEFT_SPIN,
 		RIGHT_SPIN,
-		REVERSAL_SPIN,
+		INITIALIZE_SPIN, //!< 初期位置に戻す
 		NON_SPIN
 	};
 
 	void CreateShaderResorceView();
 
-	std::array<Lib::UniquePtr<GameObjectBase>,3> m_pGameObjectBase;
+	GameObject					  m_pGameObjectBase;
 	SPIN_TYPE					  m_SpinType;
 	float						  m_SpinSpeed;
 	float						  m_Angle;

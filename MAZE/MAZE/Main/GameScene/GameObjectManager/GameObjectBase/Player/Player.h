@@ -45,6 +45,12 @@ private:
 
 	void InitializeEvent();
 
+
+	void (Player::*pUpdate)();
+	void StartUpdate();
+	void NormalUpdate();
+	void RespawnUpdate();
+
 	/**
 	 * アニメーションの読み込み
 	 * @param[in] _animEnum 読み込み先のEnum
@@ -93,17 +99,18 @@ private:
 	float						  m_MoveSpeed;
 	float						  m_Scale;
 	float						  m_AddScaleValue;
+	int							  m_FrameCount;   //!< リスポンタイムカウント用
 	SPIN_TYPE					  m_SpinType;
 	float						  m_SpinSpeed;
 	float						  m_Angle;
-	bool						  m_IsRightDir; //!< 右を向いていたらtrue
+	bool						  m_IsRightDir;   //!< 右を向いていたらtrue
 	bool						  m_IsSky;
-	bool						  m_IsStart; //!< スタート演出中か?
-	bool						  m_IsEnd;   //!< クリア演出中か?
-	bool						  m_UseLadder; //!< 梯子を使っているか?
-	bool						  m_IsDangle;  //!< ぶら下がっているか?
+	bool						  m_IsStart;      //!< ゲームが始まっているか?
+	bool						  m_IsEnd;        //!< クリア演出中か?
+	bool						  m_UseLadder;    //!< 梯子を使っているか?
+	bool						  m_IsDangle;     //!< ぶら下がっているか?
 	bool						  m_DangleEnable; //!< ぶら下がる事が出来るか
-	float						  m_Acceleration;
+	float						  m_Acceleration; //!< 重力加速度
 
 };
 
