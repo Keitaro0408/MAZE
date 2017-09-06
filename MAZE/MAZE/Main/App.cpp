@@ -40,6 +40,7 @@ void App::Initialize()
 	SINGLETON_INSTANCE(Lib::KeyDevice).KeyCheckEntry("Down", DIK_DOWNARROW);
 	SINGLETON_INSTANCE(Lib::KeyDevice).KeyCheckEntry("A", DIK_A);
 	SINGLETON_INSTANCE(Lib::KeyDevice).KeyCheckEntry("D", DIK_D);
+	SINGLETON_INSTANCE(Lib::KeyDevice).KeyCheckEntry("W", DIK_W);
 }
 
 void App::Finalize()

@@ -40,6 +40,7 @@ private:
 		LADDER_UP_DOWN_ANIM,
 		LADDER_DANGLE,
 		DOOR_OPEN,
+		TRAMPOLINE_JUMP_ANIM,
 		ANIM_MAX
 	};
 
@@ -86,9 +87,9 @@ private:
 	bool CheckGrabLadder();
 
 	/**
-	 * ギミックに対しての処理
+	 * 梯子に対しての処理
 	 */
-	void GimmickControl();
+	void LadderControl();
 
 	typedef std::array<Lib::UniquePtr<Lib::AnimUvController>, ANIM_MAX> UvController;
 
@@ -99,12 +100,15 @@ private:
 	float						  m_MoveSpeed;
 	float						  m_Scale;
 	float						  m_AddScaleValue;
+	float						  m_JumpPower;
+	float						  m_OldHeight;
 	int							  m_FrameCount;   //!< リスポンタイムカウント用
 	SPIN_TYPE					  m_SpinType;
 	float						  m_SpinSpeed;
 	float						  m_Angle;
 	bool						  m_IsRightDir;   //!< 右を向いていたらtrue
 	bool						  m_IsSky;
+	bool						  m_IsJump;
 	bool						  m_IsStart;      //!< ゲームが始まっているか?
 	bool						  m_IsEnd;        //!< クリア演出中か?
 	bool						  m_UseLadder;    //!< 梯子を使っているか?

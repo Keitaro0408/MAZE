@@ -107,7 +107,20 @@ void GamePlayManager::InitializeEvent()
 
 	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("PlayerRespawn", [this]()
 	{
-		StageLoad();
+		while (m_StageAngle != 0)
+		{
+			if (m_StageAngle < 0)
+			{
+				m_StageAngle += 90;
+				m_SelectStage = SINGLETON_INSTANCE(GamePlayManager).RightSpin(m_SelectStage);
+			}
+			else if (m_StageAngle > 0)
+			{
+				m_StageAngle -= 90;
+				m_SelectStage = SINGLETON_INSTANCE(GamePlayManager).LeftSpin(m_SelectStage);
+			}
+		}
+
 		m_StageAngle = 0;
 		m_IsSpin = true;
 	});

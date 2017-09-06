@@ -63,11 +63,11 @@ void Needle::Draw()
 		{
 			if (((m_Stage.Data[_y][_x] / 100) % 10) == 1)
 			{
-				m_pVertex->Draw(pos, m_pBlueNeedle->GetUV(), 1.f, Lib::VECTOR2(1, 1));
+				m_pVertex->Draw(pos, m_pBlueNeedle->GetUV());
 			}
 			else
 			{
-				m_pVertex->Draw(pos, m_pGreenNeedle->GetUV(), 1.f, Lib::VECTOR2(1, 1));
+				m_pVertex->Draw(pos, m_pGreenNeedle->GetUV());
 			}
 		}
 		else if ((m_Stage.Data[_y][_x] % 10) == Stage::NEEDLE_OBJECT &&

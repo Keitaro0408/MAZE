@@ -67,6 +67,15 @@ LadderDangle
 	6
 }
 
+PlayerTrampoline
+{
+	448,
+	0,
+	64,
+	64,
+	2
+}
+
 PlayerDoor
 {
 	0,
@@ -166,7 +175,7 @@ BlueNeedle
 	0
 }
 
-Trampoline
+TrampolineObj
 {
 	128,
 	384,

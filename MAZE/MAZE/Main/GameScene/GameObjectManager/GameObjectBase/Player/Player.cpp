@@ -28,8 +28,11 @@ m_IsStart(false),
 m_IsEnd(false),
 m_IsDangle(false),
 m_DangleEnable(true),
+m_IsJump(false),
 m_FrameCount(180),
-m_Scale(0.5f)
+m_Scale(0.5f),
+m_OldHeight(0.f),
+m_JumpPower(15.f)
 {
 	InitializeTask(3, 3);
 
@@ -41,6 +44,8 @@ m_Scale(0.5f)
 	LoadAnimation(LADDER_UP_DOWN_ANIM, "PlayerLadder", 8);
 	LoadAnimation(LADDER_DANGLE, "LadderDangle", 8);
 	LoadAnimation(DOOR_OPEN, "PlayerDoor", 20);
+	LoadAnimation(TRAMPOLINE_JUMP_ANIM, "PlayerTrampoline", 5);
+	
 
 	m_AddScaleValue = (1.f - m_Scale) / 60;
 	m_pVertex = new Lib::Vertex2D(
@@ -117,11 +122,14 @@ void Player::NormalUpdate()
 	GamePlayManager::SELECT_STAGE stage;
 	stage = SINGLETON_INSTANCE(GamePlayManager).GetSelectStage();
 	int posArrayX = static_cast<int>((m_Pos.x - 480) / 64);
+	int leftPosArrayX = static_cast<int>(((m_Pos.x - 480) - 20) / 64);
+	int rightPosArrayX = static_cast<int>(((m_Pos.x - 480) + 20) / 64);
 	int posArrayY = static_cast<int>((m_Pos.y - 60) / 64);
 
 	// ゴール処理------------------------------------------------------------------------
-	if ((stage.Data[posArrayY][posArrayX] % 10) == Stage::GOAL_DOOR_OBJECT &&
-		SINGLETON_INSTANCE(GamePlayManager).CheckEnableGimmick(posArrayX, posArrayY))
+	if ((stage.Data[posArrayY][leftPosArrayX] % 10) == Stage::GOAL_DOOR_OBJECT &&
+		(stage.Data[posArrayY][rightPosArrayX] % 10) == Stage::GOAL_DOOR_OBJECT &&
+		SINGLETON_INSTANCE(GamePlayManager).CheckEnableGimmick(leftPosArrayX, posArrayY))
 	{
 		if (!m_IsEnd &&
 			SINGLETON_INSTANCE(Lib::KeyDevice).AnyMatchKeyCheck("Up", Lib::KEY_PUSH))
@@ -151,13 +159,17 @@ void Player::NormalUpdate()
 	MoveUpdate();
 
 	if (SINGLETON_INSTANCE(Lib::KeyDevice).AnyMatchKeyCheck("A", Lib::KEY_PUSH) &&
-		!m_IsSky)
+		!m_IsSky || 
+		SINGLETON_INSTANCE(Lib::KeyDevice).AnyMatchKeyCheck("A", Lib::KEY_PUSH) && 
+		m_UseLadder)
 	{
 		SINGLETON_INSTANCE(Lib::EventManager).CallEvent("LeftSpin");
 	}
 
 	if (SINGLETON_INSTANCE(Lib::KeyDevice).AnyMatchKeyCheck("D", Lib::KEY_PUSH) &&
-		!m_IsSky)
+		!m_IsSky || 
+		SINGLETON_INSTANCE(Lib::KeyDevice).AnyMatchKeyCheck("D", Lib::KEY_PUSH) && 
+		m_UseLadder)
 	{
 		SINGLETON_INSTANCE(Lib::EventManager).CallEvent("RightSpin");
 	}
@@ -293,6 +305,7 @@ void Player::StageSpinUpdate()
 			m_pUvController[LADDER_UP_DOWN_ANIM]->Control(false, Lib::ANIM_LOOP);
 			m_UseLadder = true;
 			m_Animation = LADDER_UP_DOWN_ANIM;
+			m_Pos.x = static_cast<float>((posArrayX * 64 + 480) + 32);
 			if (CheckLadder(posArrayX - 1, posArrayY) ||
 				CheckLadder(posArrayX + 1, posArrayY))
 			{
@@ -303,7 +316,7 @@ void Player::StageSpinUpdate()
 					m_IsDangle = true;
 					m_Animation = LADDER_DANGLE;
 					m_pUvController[LADDER_DANGLE]->Control(false, Lib::ANIM_NORMAL);
-					m_Pos.y += 32.f;
+					m_Pos.y += 25.f;
 				}
 			}
 		}
@@ -333,27 +346,37 @@ void Player::MoveUpdate()
 
 	if (SINGLETON_INSTANCE(Lib::KeyDevice).AnyMatchKeyCheck("RightMove", Lib::KEY_ON))
 	{
-		if (!m_IsDangle)
+		if (!m_IsDangle && !m_UseLadder)
 		{
 			m_Pos.x += m_MoveSpeed;
 			m_Animation = RIGHT_WALK_ANIM;
 			m_IsRightDir = true;
 			m_pUvController[RIGHT_WALK_ANIM]->Control(false, Lib::ANIM_LOOP);
 		}
+		else if (m_UseLadder)
+		{
+			m_UseLadder = false;
+			m_IsRightDir = true;
+		}
 	}
 
 	if (SINGLETON_INSTANCE(Lib::KeyDevice).AnyMatchKeyCheck("LeftMove", Lib::KEY_ON))
 	{
-		if (!m_IsDangle)
+		if (!m_IsDangle && !m_UseLadder)
 		{
 			m_Pos.x -= m_MoveSpeed;
 			m_Animation = LEFT_WALK_ANIM;
 			m_IsRightDir = false;
 			m_pUvController[LEFT_WALK_ANIM]->Control(false, Lib::ANIM_LOOP);
 		}
+		else if (m_UseLadder)
+		{
+			m_UseLadder = false;
+			m_IsRightDir = false;
+		}
 	}
 
-	if (m_UseLadder)
+	if (m_UseLadder && !m_IsDangle)
 	{
 		m_Animation = LADDER_UP_DOWN_ANIM;
 	}
@@ -361,13 +384,24 @@ void Player::MoveUpdate()
 
 void Player::CheckCollision()
 {
+#ifdef _DEBUG
+	if (SINGLETON_INSTANCE(Lib::KeyDevice).AnyMatchKeyCheck("W", Lib::KEY_PUSH) &&
+		!m_IsSky)
+	{
+		m_OldHeight = m_Pos.y;
+		m_Acceleration = -15;
+		m_Pos.y += m_Acceleration;
+		m_IsJump = true;
+	}
+#endif
 	GamePlayManager::SELECT_STAGE stage = SINGLETON_INSTANCE(GamePlayManager).GetSelectStage();
 	int leftPosArrayX = static_cast<int>(((m_Pos.x - 480) - 14) / 64);
 	int rightPosArrayX = static_cast<int>(((m_Pos.x - 480) + 14) / 64);
 	int posArrayX = static_cast<int>((m_Pos.x - 480) / 64);
 	int posArrayY = static_cast<int>((m_Pos.y - 60) / 64);
 	int bottomPosArrayY = static_cast<int>((m_Pos.y - 60 + 32) / 64);
-	
+	int topPosArrayY = static_cast<int>(((m_Pos.y - 60) - 32) / 64);
+
 	if ((stage.Data[posArrayY][leftPosArrayX] % 10) == Stage::GROUND_OBJECT)
 	{
 		m_Pos.x += m_MoveSpeed;
@@ -384,13 +418,14 @@ void Player::CheckCollision()
 		SINGLETON_INSTANCE(Lib::EventManager).CallEvent("CoinGet");
 	}
 
+
 	if ((stage.Data[bottomPosArrayY][rightPosArrayX] % 10) != Stage::GROUND_OBJECT &&
 		(stage.Data[bottomPosArrayY][leftPosArrayX] % 10) != Stage::GROUND_OBJECT)
 	{
 		if (!m_UseLadder)
 		{
-			m_Acceleration += 0.7f;
 			m_Pos.y += m_Acceleration;
+			m_Acceleration += 0.7f;
 			m_pUvController[LADDER_DANGLE]->SetAnimCount(0);
 
 			m_IsSky = true;
@@ -426,6 +461,18 @@ void Player::CheckCollision()
 		m_Acceleration = 0;
 	}
 
+	if (m_IsJump)
+	{
+		if ((stage.Data[topPosArrayY][rightPosArrayX] % 10) == Stage::GROUND_OBJECT ||
+			(stage.Data[topPosArrayY][leftPosArrayX] % 10) == Stage::GROUND_OBJECT)
+		{
+			m_IsJump = false;
+			m_Pos.y += (m_Pos.y - 32) - (topPosArrayY * 64 + 60 + 32);
+			m_Acceleration = 0;
+		}
+	}
+
+
 	if ((stage.Data[posArrayY][posArrayX] % 10) == Stage::NEEDLE_OBJECT &&
 		SINGLETON_INSTANCE(GamePlayManager).CheckEnableGimmick(posArrayX, bottomPosArrayY))
 	{
@@ -436,7 +483,7 @@ void Player::CheckCollision()
 		pUpdate = &Player::RespawnUpdate;
 	}
 
-	GimmickControl();
+	LadderControl();
 }
 
 bool Player::CheckGrabLadder()
@@ -444,13 +491,13 @@ bool Player::CheckGrabLadder()
 	return false;
 }
 
-void Player::GimmickControl()
+void Player::LadderControl()
 {
 	GamePlayManager::SELECT_STAGE stage = SINGLETON_INSTANCE(GamePlayManager).GetSelectStage();
 
 	int posArrayX = static_cast<int>((m_Pos.x - 480) / 64);
 	int posArrayY = static_cast<int>((m_Pos.y - 60) / 64);
-	int TopPosArrayY = static_cast<int>((m_Pos.y - 60 - 32) / 64);
+	int TopPosArrayY = static_cast<int>(((m_Pos.y - 60) - 32) / 64);
 
 	auto CheckLadder = [&](int _x, int _y)
 	{
@@ -482,10 +529,15 @@ void Player::GimmickControl()
 				m_DangleEnable = false;
 			}
 			else if (m_DangleEnable && 
-				(stage.Data[posArrayY + 1][posArrayX] % 10) != Stage::GROUND_OBJECT)
+				(stage.Data[posArrayY + 1][posArrayX] % 10) != Stage::GROUND_OBJECT &&
+				m_Acceleration >= 0)
 			{
 				m_UseLadder = true;
+				m_IsJump = false;
 				m_IsDangle = true;
+				m_Pos.x = static_cast<float>((posArrayX * 64 + 480) + 32);
+				m_Pos.y = static_cast<float>((TopPosArrayY * 64 + 60) + 32);
+				m_Pos.y += 25.f;
 				m_Animation = LADDER_DANGLE;
 				m_pUvController[LADDER_DANGLE]->Control(false, Lib::ANIM_NORMAL);
 				m_Acceleration = 0;
@@ -511,6 +563,7 @@ void Player::GimmickControl()
 				stage.Data[TopPosArrayY][posArrayX] == Stage::END_LADDER_OBJECT)
 			{
 				m_Acceleration = 0;
+				m_Pos.x = static_cast<float>((posArrayX * 64 + 480) + 32);
 				m_pUvController[LADDER_UP_DOWN_ANIM]->Control(false, Lib::ANIM_LOOP);
 				m_UseLadder = true;
 				m_Pos.y -= m_MoveSpeed;
@@ -519,6 +572,7 @@ void Player::GimmickControl()
 				CheckLadder(posArrayX, TopPosArrayY))
 			{
 				m_Animation = LADDER_UP_DOWN_ANIM;
+				m_Pos.x = static_cast<float>((posArrayX * 64 + 480) + 32);
 				m_pUvController[LADDER_UP_DOWN_ANIM]->Control(false, Lib::ANIM_LOOP);
 				m_UseLadder = true;
 				m_Pos.y -= m_MoveSpeed;
@@ -535,6 +589,7 @@ void Player::GimmickControl()
 				stage.Data[posArrayY][posArrayX] == Stage::END_LADDER_OBJECT)
 			{
 				m_Acceleration = 0;
+				m_Pos.x = static_cast<float>((posArrayX * 64 + 480) + 32);
 				m_pUvController[LADDER_UP_DOWN_ANIM]->Control(false, Lib::ANIM_LOOP);
 				m_UseLadder = true;
 				m_Pos.y += m_MoveSpeed;
@@ -544,6 +599,7 @@ void Player::GimmickControl()
 				CheckLadder(posArrayX, posArrayY))
 			{
 				m_Animation = LADDER_UP_DOWN_ANIM;
+				m_Pos.x = static_cast<float>((posArrayX * 64 + 480) + 32);
 				m_pUvController[LADDER_UP_DOWN_ANIM]->Control(false, Lib::ANIM_LOOP);
 				m_UseLadder = true;
 				m_Pos.y += m_MoveSpeed;
