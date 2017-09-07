@@ -83,6 +83,9 @@
     <Filter Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Trampoline">
       <UniqueIdentifier>{ac4a5d79-ad95-4d5e-9a75-b5ca5fb8edf8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Main\NextStageScene">
+      <UniqueIdentifier>{c253a7e2-082d-4ad4-aff2-2cb3c443ab0d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main\App.cpp">
@@ -141,6 +144,9 @@
     </ClCompile>
     <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Trampoline\Trampoline.cpp">
       <Filter>Main\GameScene\GameObjectManager\GameObjectBase\Stage\Trampoline</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\NextStageScene\NextStageScene.cpp">
+      <Filter>Main\NextStageScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -203,6 +209,9 @@
     </ClInclude>
     <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Trampoline\Trampoline.h">
       <Filter>Main\GameScene\GameObjectManager\GameObjectBase\Stage\Trampoline</Filter>
+    </ClInclude>
+    <ClInclude Include="Main\NextStageScene\NextStageScene.h">
+      <Filter>Main\NextStageScene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

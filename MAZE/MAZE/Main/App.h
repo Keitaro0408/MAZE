@@ -12,6 +12,7 @@ public:
 	{
 		TITLE_SCENE,
 		GAME_SCENE,
+		NEXT_STAGE_SCENE,
 		SCENE_MAX
 	};
 

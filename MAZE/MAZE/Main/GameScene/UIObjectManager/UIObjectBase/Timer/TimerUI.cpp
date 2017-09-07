@@ -6,6 +6,7 @@
 #include "TimerUI.h"
 #include "Texture\TextureManager.h"
 #include "..\..\..\..\ResourceId.h"
+#include "..\..\..\..\GamePlayManager\GamePlayManager.h"
 
 #include "Dx11\DX11Manager.h"
 #include "Window\Window.h"
@@ -30,6 +31,11 @@ m_IsStart(false)
 	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("GameStart", [this]()
 	{
 		m_IsStart = true;
+	});
+
+	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("OpenGoalDoor", [this]()
+	{
+		SINGLETON_INSTANCE(GamePlayManager).SetClearTime(m_Time);
 	});
 
 	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("CoinGet", [this]()

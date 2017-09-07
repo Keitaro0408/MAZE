@@ -7,6 +7,7 @@
 #include "Window\Window.h"
 #include "GameScene\GameScene.h"
 #include "TitleScene\TitleScene.h"
+#include "NextStageScene\NextStageScene.h"
 #include "Helper\Helper.h"
 #include "GamePlayManager\GamePlayManager.h"
 #include "DxInput\KeyBoard\KeyDevice.h"
@@ -29,9 +30,11 @@ void App::Initialize()
 	SINGLETON_CREATE(GamePlayManager);
 	m_pScene.push_back(new TitleScene());
 	m_pScene.push_back(new GameScene());
+	m_pScene.push_back(new NextStageScene());
 	
 	SINGLETON_INSTANCE(Lib::SceneManager).AddScene(m_pScene[TITLE_SCENE]);
 	SINGLETON_INSTANCE(Lib::SceneManager).AddScene(m_pScene[GAME_SCENE]);
+	SINGLETON_INSTANCE(Lib::SceneManager).AddScene(m_pScene[NEXT_STAGE_SCENE]);
 	SINGLETON_INSTANCE(Lib::SceneManager).ChangeScene("GameScene");
 
 	SINGLETON_INSTANCE(Lib::KeyDevice).KeyCheckEntry("RightMove", DIK_RIGHTARROW);

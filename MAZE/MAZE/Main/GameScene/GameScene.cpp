@@ -39,6 +39,9 @@ bool GameScene::Initialize()
 	m_FrameCount = 0;
 	int dummy = 0;
 	SINGLETON_CREATE(Lib::EventManager);
+	SINGLETON_INSTANCE(GamePlayManager).NextStage();
+	SINGLETON_INSTANCE(GamePlayManager).StageLoad();
+
 	SINGLETON_CREATE(Lib::TextureManager);
 	SINGLETON_INSTANCE(Lib::TextureManager).
 		Initialize(SINGLETON_INSTANCE(Lib::DX11Manager).GetDevice());
@@ -54,8 +57,6 @@ bool GameScene::Initialize()
 	SINGLETON_INSTANCE(Lib::DSoundManager).LoadSound("Resource\\GameScene\\Sound\\Landing.wav", &dummy);
 	SINGLETON_INSTANCE(Lib::DSoundManager).LoadSound("Resource\\GameScene\\Sound\\CoinGet.wav", &dummy);
 
-	SINGLETON_INSTANCE(GamePlayManager).InitializeEvent();
-	SINGLETON_INSTANCE(GamePlayManager).StageLoad();
 	m_pGameObjectManager = new GameObjectManager();
 	m_pUIObjectManager = new UIObjectManager();
 
@@ -96,6 +97,7 @@ void GameScene::Execute()
 		SINGLETON_INSTANCE(Lib::EventManager).CallEvent("GameStart");
 		SINGLETON_INSTANCE(Lib::DSoundManager).
 			SoundOperation(ResourceId::Game::MAIN_BGM,Lib::DSoundManager::SOUND_LOOP);
+		m_FrameCount++;
 	}
 	SINGLETON_INSTANCE(Lib::KeyDevice).Update();
 	SINGLETON_INSTANCE(Lib::DX11Manager).BeginScene();

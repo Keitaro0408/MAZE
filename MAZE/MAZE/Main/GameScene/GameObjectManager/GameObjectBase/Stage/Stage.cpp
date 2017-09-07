@@ -48,18 +48,28 @@ m_SpinType(NON_SPIN)
 	{
 		m_SpinType = LEFT_SPIN;
 		m_SpinSpeed = -2;
+		m_AddAngleCount = 0;
 	});
 
 	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("RightSpin", [this]()
 	{
 		m_SpinType = RIGHT_SPIN;
 		m_SpinSpeed = 2;
+		m_AddAngleCount = 0;
+	});
+
+	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("ReversalSpin", [this]()
+	{
+		m_SpinType = REVERSAL_SPIN;
+		m_SpinSpeed = 4;
+		m_AddAngleCount = 0;
 	});
 
 	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("PlayerRespawn", [this]()
 	{
 		m_SpinType = INITIALIZE_SPIN;
 		m_SpinSpeed = 4;
+		m_AddAngleCount = 0;
 	});
 
 	InitializeTask(2);
@@ -86,35 +96,55 @@ void Stage::Update()
 		m_pGameObjectBase[i]->Update();
 	}
 	if (!SINGLETON_INSTANCE(GamePlayManager).GetIsSpin()) return;
-
+	GamePlayManager::SELECT_STAGE stage = SINGLETON_INSTANCE(GamePlayManager).GetSelectStage();
 	float stageAngle = SINGLETON_INSTANCE(GamePlayManager).GetStageAngle();
-	if (m_Angle <= -360 ||
-		m_Angle >= 360)
-	{
-		m_Angle = 0;
-	}
+	//if (m_Angle <= -360 ||
+	//	m_Angle >= 360)
+	//{
+	//	m_Angle = 0;
+	//}
 
 	switch (m_SpinType)
 	{
 	case RIGHT_SPIN:
 		m_Angle += m_SpinSpeed;
-		if ((static_cast<int>(m_Angle) % 90) == 0)
+		m_AddAngleCount += m_SpinSpeed;
+		if ((static_cast<int>(m_AddAngleCount) % 90) == 0)
 		{
 			m_Angle = stageAngle;
+			stage = SINGLETON_INSTANCE(GamePlayManager).RightSpin(stage);
+			//SINGLETON_INSTANCE(GamePlayManager).SetSelectStage(stage);
 			SINGLETON_INSTANCE(GamePlayManager).SetIsSpin(false);
 		}
 		break;
 	case LEFT_SPIN:
 		m_Angle += m_SpinSpeed;
-		if ((static_cast<int>(m_Angle) % 90) == 0)
+		m_AddAngleCount += m_SpinSpeed;
+		if ((static_cast<int>(m_AddAngleCount) % 90) == 0)
 		{
 			m_Angle = stageAngle;
+			stage = SINGLETON_INSTANCE(GamePlayManager).LeftSpin(stage);
+			//SINGLETON_INSTANCE(GamePlayManager).SetSelectStage(stage);
+			SINGLETON_INSTANCE(GamePlayManager).SetIsSpin(false);
+		}
+		break;
+	case REVERSAL_SPIN:
+		m_Angle += m_SpinSpeed;
+		m_AddAngleCount += m_SpinSpeed;
+
+		if ((static_cast<int>(m_AddAngleCount) % 180) == 0)
+		{
+			m_Angle = stageAngle;
+			stage = SINGLETON_INSTANCE(GamePlayManager).LeftSpin(stage);
+			stage = SINGLETON_INSTANCE(GamePlayManager).LeftSpin(stage);
+			//SINGLETON_INSTANCE(GamePlayManager).SetSelectStage(stage);
 			SINGLETON_INSTANCE(GamePlayManager).SetIsSpin(false);
 		}
 		break;
 	case INITIALIZE_SPIN:
 		float tmpAngle = m_Angle;
 		m_Angle += m_SpinSpeed;
+		//m_AddAngleCount += m_SpinSpeed;
 		if (m_Angle >= 0 && tmpAngle <= 0 || 
 			m_Angle <= 0 && tmpAngle >= 0)
 		{	

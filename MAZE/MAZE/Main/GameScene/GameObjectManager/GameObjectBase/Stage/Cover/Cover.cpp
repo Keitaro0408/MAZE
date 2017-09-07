@@ -14,7 +14,7 @@ Cover::Cover()
 	m_Stage = SINGLETON_INSTANCE(GamePlayManager).GetSelectStage();
 
 	m_pUvController = new Lib::AnimUvController();
-	m_pUvController->LoadAnimation("Resource\\GameScene\\Texture\\Texture.anim", "GreenGround");
+	m_pUvController->LoadAnimation("Resource\\GameScene\\Texture\\Texture.anim", "Cover");
 
 	m_pVertex = new Lib::Vertex2D(
 		SINGLETON_INSTANCE(Lib::DX11Manager).GetDevice(),
@@ -51,13 +51,36 @@ void Cover::Draw()
 	pos.x = static_cast<float>((windowSize.x / 2) - (64 * (STAGE_WIDTH / 2)));
 	pos.y = static_cast<float>((windowSize.y / 2) - (64 * (STAGE_HEIGHT / 2)));
 
-	m_pVertex->SetTexture(
-		SINGLETON_INSTANCE(Lib::TextureManager).GetTexture(ResourceId::Game::UNITY_TEX));
+	auto CoverDraw = [&](int _x, int _y)
+	{
+		if ((m_Stage.Data[_y][_x] % 10) == Stage::COVER_OBJECT &&
+			((m_Stage.Data[_y][_x] / 10) % 10) == 0)
+		{
+			m_pVertex->Draw(pos, m_pUvController->GetUV());
+		}
+		else if ((m_Stage.Data[_y][_x] % 10) == Stage::COVER_OBJECT &&
+			((m_Stage.Data[_y][_x] / 10) % 10) == 1)
+		{
+			m_pVertex->Draw(pos, m_pUvController->GetUV(), 1.f, Lib::VECTOR2(1, 1), 90);
+		}
+		else if ((m_Stage.Data[_y][_x] % 10) == Stage::COVER_OBJECT &&
+			((m_Stage.Data[_y][_x] / 10) % 10) == 2)
+		{
+			m_pVertex->Draw(pos, m_pUvController->GetUV(), 1.f, Lib::VECTOR2(1, 1), 180);
+		}
+		else if ((m_Stage.Data[_y][_x] % 10) == Stage::COVER_OBJECT &&
+			((m_Stage.Data[_y][_x] / 10) % 10) == 3)
+		{
+			m_pVertex->Draw(pos, m_pUvController->GetUV(), 1.f, Lib::VECTOR2(1, 1), -90);
+		}
+	};
+
 	for (int i = 0; i < STAGE_HEIGHT; i++)
 	{
 		pos.x = static_cast<float>((windowSize.x / 2) - (64 * (STAGE_WIDTH / 2)));
 		for (int j = 0; j < STAGE_WIDTH; j++)
 		{
+			CoverDraw(j,i);
 			pos.x += 64.f;
 		}
 		pos.y += 64.f;

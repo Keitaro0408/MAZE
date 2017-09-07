@@ -45,6 +45,7 @@ private:
 	{
 		LEFT_SPIN,
 		RIGHT_SPIN,
+		REVERSAL_SPIN,
 		INITIALIZE_SPIN, //!< 初期位置に戻す
 		NON_SPIN
 	};
@@ -55,6 +56,7 @@ private:
 	SPIN_TYPE					  m_SpinType;
 	float						  m_SpinSpeed;
 	float						  m_Angle;
+	float						  m_AddAngleCount;
 	Lib::UniquePtr<Lib::Vertex2D> m_pVertex;
 	Lib::VECTOR2				  m_Uv[4];
 								  
