@@ -11,7 +11,7 @@
 
 
 GamePlayManager::GamePlayManager() :
-m_StageNum(10),
+m_StageNum(5),
 m_StageAngle(0.f),
 m_ClearTime(0),
 m_Angle(0.f),
@@ -36,6 +36,7 @@ bool GamePlayManager::CheckGround(int _x, int _y)
 	{
 		return true;
 	}
+
 	return false;
 }
 
@@ -155,7 +156,7 @@ void GamePlayManager::StageLoad()
 	FILE*  fp;
 	if (fopen_s(&fp, m_FileName.c_str(), "r") != 0)
 	{
-		m_StageNum = 10;
+		m_StageNum = 1;
 		m_FileName = "Resource\\GameScene\\Stage\\" + std::to_string(m_StageNum) + ".csv";
 		fopen_s(&fp, m_FileName.c_str(), "r");
 	}

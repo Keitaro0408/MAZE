@@ -143,7 +143,14 @@ void Stage::Update()
 		break;
 	case INITIALIZE_SPIN:
 		float tmpAngle = m_Angle;
-		m_Angle += m_SpinSpeed;
+		if (m_Angle < 0)
+		{
+			m_Angle += m_SpinSpeed;
+		}
+		else
+		{
+			m_Angle -= m_SpinSpeed;
+		}
 		//m_AddAngleCount += m_SpinSpeed;
 		if (m_Angle >= 0 && tmpAngle <= 0 || 
 			m_Angle <= 0 && tmpAngle >= 0)

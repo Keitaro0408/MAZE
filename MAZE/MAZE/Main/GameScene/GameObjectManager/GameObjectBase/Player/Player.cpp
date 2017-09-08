@@ -165,6 +165,8 @@ void Player::NormalUpdate()
 		m_UseLadder)
 	{
 		SINGLETON_INSTANCE(Lib::EventManager).CallEvent("LeftSpin");
+		m_SpinSpeed = -2;
+		StageSpinUpdate();
 	}
 
 	if (SINGLETON_INSTANCE(Lib::KeyDevice).AnyMatchKeyCheck("D", Lib::KEY_PUSH) &&
@@ -173,6 +175,8 @@ void Player::NormalUpdate()
 		m_UseLadder)
 	{
 		SINGLETON_INSTANCE(Lib::EventManager).CallEvent("RightSpin");
+		m_SpinSpeed = 2;
+		StageSpinUpdate();
 	}
 
 	if (SINGLETON_INSTANCE(Lib::KeyDevice).AnyMatchKeyCheck("W", Lib::KEY_PUSH) &&
@@ -181,6 +185,8 @@ void Player::NormalUpdate()
 		m_UseLadder)
 	{
 		SINGLETON_INSTANCE(Lib::EventManager).CallEvent("ReversalSpin");
+		m_SpinSpeed = 4;
+		StageSpinUpdate();
 	}
 
 	LadderControl();
@@ -316,7 +322,8 @@ void Player::StageSpinUpdate()
 		return false;
 	};
 
-	if (abs(m_Angle) >= 90.f - abs(m_SpinSpeed))
+	if (abs(m_Angle) >= 90.f && abs(m_SpinSpeed) == 2 ||
+		abs(m_Angle) >= 180.f && abs(m_SpinSpeed) == 4)
 	{
 		m_pUvController[LADDER_DANGLE]->SetAnimCount(0);
 		if (CheckLadder(posArrayX, posArrayY))
@@ -324,7 +331,7 @@ void Player::StageSpinUpdate()
 			m_pUvController[LADDER_UP_DOWN_ANIM]->Control(false, Lib::ANIM_LOOP);
 			m_UseLadder = true;
 			m_Animation = LADDER_UP_DOWN_ANIM;
-			m_Pos.x = static_cast<float>((posArrayX * 64 + 480) + 32);
+			//m_Pos.x = static_cast<float>((posArrayX * 64 + 480) + 32);
 			if (CheckLadder(posArrayX - 1, posArrayY) ||
 				CheckLadder(posArrayX + 1, posArrayY))
 			{
@@ -335,7 +342,8 @@ void Player::StageSpinUpdate()
 					m_IsDangle = true;
 					m_Animation = LADDER_DANGLE;
 					m_pUvController[LADDER_DANGLE]->Control(false, Lib::ANIM_NORMAL);
-					m_Pos.y += 25.f;
+					m_Pos.y = static_cast<float>((posArrayX * 64 + 60) + 32 + 25.f);
+
 				}
 			}
 		}
@@ -380,7 +388,7 @@ void Player::MoveUpdate()
 			m_IsRightDir = true;
 			m_pUvController[RIGHT_WALK_ANIM]->Control(false, Lib::ANIM_LOOP);
 			if (SINGLETON_INSTANCE(GamePlayManager).CheckGround(rightPosArrayX, posArrayY) ||
-				SINGLETON_INSTANCE(GamePlayManager).CheckRightCover(rightPosArrayX, posArrayY))
+				(stage.Data[posArrayY][rightPosArrayX] % 10) == Stage::NEEDLE_OBJECT)
 			{
 				m_Pos.x -= m_MoveSpeed;
 			}
@@ -402,7 +410,7 @@ void Player::MoveUpdate()
 			m_IsRightDir = false;
 			m_pUvController[LEFT_WALK_ANIM]->Control(false, Lib::ANIM_LOOP);
 			if (SINGLETON_INSTANCE(GamePlayManager).CheckGround(leftPosArrayX, posArrayY) ||
-				SINGLETON_INSTANCE(GamePlayManager).CheckLeftCover(leftPosArrayX, posArrayY))
+				(stage.Data[posArrayY][leftPosArrayX] % 10) == Stage::NEEDLE_OBJECT)
 			{
 				m_Pos.x += m_MoveSpeed;
 			}
@@ -428,7 +436,7 @@ void Player::CheckCollision()
 	int posArrayX = static_cast<int>((m_Pos.x - 480) / 64);
 	int posArrayY = static_cast<int>((m_Pos.y - 60) / 64);
 	int bottomPosArrayY = static_cast<int>((m_Pos.y - 60 + 32) / 64);
-	int topPosArrayY = static_cast<int>(((m_Pos.y - 60) - 32) / 64);
+	int topPosArrayY = static_cast<int>(((m_Pos.y - 60) - 25) / 64);
 
 
 	if (stage.Data[posArrayY][posArrayX] == Stage::COIN_OBJECT)
@@ -498,7 +506,6 @@ void Player::CheckCollision()
 
 	if (m_IsJump)
 	{
-		m_pUvController[TRAMPOLINE_JUMP_ANIM]->Control(false, Lib::ANIM_NORMAL);
 		if (SINGLETON_INSTANCE(GamePlayManager).CheckGround(rightPosArrayX, topPosArrayY ||
 			SINGLETON_INSTANCE(GamePlayManager).CheckGround(leftPosArrayX, topPosArrayY)))
 		{
@@ -506,6 +513,7 @@ void Player::CheckCollision()
 			m_Pos.y += (m_Pos.y - 32) - (topPosArrayY * 64 + 60 + 32);
 			m_Acceleration = 0;
 		}
+		m_pUvController[TRAMPOLINE_JUMP_ANIM]->Control(false, Lib::ANIM_NORMAL);
 	}
 
 
