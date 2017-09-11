@@ -26,6 +26,7 @@ ApplicationBase(TEXT("MAZE"), 1920, 1080)
 
 void App::Initialize()
 {
+	::ImmDisableIME(NULL);
 	SINGLETON_INSTANCE(Lib::Window).ChangeWindowSize(1280,720);
 	SINGLETON_CREATE(GamePlayManager);
 	m_pScene.push_back(new TitleScene());

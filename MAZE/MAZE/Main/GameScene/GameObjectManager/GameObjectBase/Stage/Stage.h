@@ -52,6 +52,7 @@ private:
 
 	void CreateShaderResorceView();
 
+	int							  m_TextureIndex;
 	GameObject					  m_pGameObjectBase;
 	SPIN_TYPE					  m_SpinType;
 	float						  m_SpinSpeed;

@@ -11,7 +11,7 @@
 
 
 GamePlayManager::GamePlayManager() :
-m_StageNum(5),
+m_StageNum(1),
 m_StageAngle(0.f),
 m_ClearTime(0),
 m_Angle(0.f),

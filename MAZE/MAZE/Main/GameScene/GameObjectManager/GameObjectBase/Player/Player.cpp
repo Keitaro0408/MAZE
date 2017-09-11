@@ -342,7 +342,7 @@ void Player::StageSpinUpdate()
 					m_IsDangle = true;
 					m_Animation = LADDER_DANGLE;
 					m_pUvController[LADDER_DANGLE]->Control(false, Lib::ANIM_NORMAL);
-					m_Pos.y = static_cast<float>((posArrayX * 64 + 60) + 32 + 25.f);
+					m_Pos.y = static_cast<float>((posArrayY * 64 + 60) + 32 + 25.f);
 
 				}
 			}
@@ -501,18 +501,19 @@ void Player::CheckCollision()
 		m_Pos.y -= (m_Pos.y + 32) - (bottomPosArrayY * 64 + 60);
 		m_UseLadder = false;
 		m_Acceleration = 0;
+		m_IsJump = false;
 	}
 
 
 	if (m_IsJump)
 	{
-		if (SINGLETON_INSTANCE(GamePlayManager).CheckGround(rightPosArrayX, topPosArrayY ||
-			SINGLETON_INSTANCE(GamePlayManager).CheckGround(leftPosArrayX, topPosArrayY)))
-		{
-			m_IsJump = false;
-			m_Pos.y += (m_Pos.y - 32) - (topPosArrayY * 64 + 60 + 32);
-			m_Acceleration = 0;
-		}
+		//if (SINGLETON_INSTANCE(GamePlayManager).CheckGround(rightPosArrayX, topPosArrayY ||
+		//	SINGLETON_INSTANCE(GamePlayManager).CheckGround(leftPosArrayX, topPosArrayY)))
+		//{
+		//	m_IsJump = false;
+		//	m_Pos.y += (m_Pos.y - 32) - (topPosArrayY * 64 + 60 + 32);
+		//	m_Acceleration = 0;
+		//}
 		m_pUvController[TRAMPOLINE_JUMP_ANIM]->Control(false, Lib::ANIM_NORMAL);
 	}
 

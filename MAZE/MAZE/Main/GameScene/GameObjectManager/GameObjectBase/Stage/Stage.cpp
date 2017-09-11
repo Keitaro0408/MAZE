@@ -14,19 +14,20 @@
 
 #include "TaskManager\TaskManager.h"
 #include "Window\Window.h"
+#include "Texture\TextureManager.h"
 #include "Event\EventManager.h"
 
 
 Stage::Stage() :
 m_SpinSpeed(0.f),
 m_Angle(0.f),
-m_SpinType(NON_SPIN)
+m_SpinType(NON_SPIN),
+m_TextureIndex(0)
 {
 	m_Uv[0] = Lib::VECTOR2(0, 0);
 	m_Uv[1] = Lib::VECTOR2(1, 0);
 	m_Uv[2] = Lib::VECTOR2(0, 1);
 	m_Uv[3] = Lib::VECTOR2(1, 1);
-
 	CreateShaderResorceView();
 	
 	m_pGameObjectBase[0] = new Ground();
@@ -43,7 +44,7 @@ m_SpinType(NON_SPIN)
 		SINGLETON_INSTANCE(Lib::Window).GetWindowSize());
 	m_pVertex->Initialize(Lib::VECTOR2(1920, 1080),
 		m_Uv);
-
+	
 	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("LeftSpin", [this]()
 	{
 		m_SpinType = LEFT_SPIN;
@@ -82,6 +83,7 @@ Stage::~Stage()
 	m_pTex->Release();
 	m_pTexRTV->Release();
 	m_pTexSRV->Release();
+	SINGLETON_INSTANCE(Lib::TextureManager).ReleaseTexture(m_TextureIndex);
 }
 
 
