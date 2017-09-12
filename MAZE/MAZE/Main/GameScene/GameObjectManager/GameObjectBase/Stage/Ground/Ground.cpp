@@ -13,14 +13,14 @@ Ground::Ground()
 {
 	m_Stage = SINGLETON_INSTANCE(GamePlayManager).GetSelectStage();
 
-	m_pGreenUv = new Lib::AnimUvController();
+	m_pGreenUv = Lib::MakeUnique<Lib::AnimUvController>();
 	m_pGreenUv->LoadAnimation("Resource\\GameScene\\Texture\\Texture.anim", "GreenGround");
-	m_pBlueUv = new Lib::AnimUvController();
+	m_pBlueUv = Lib::MakeUnique<Lib::AnimUvController>();
 	m_pBlueUv->LoadAnimation("Resource\\GameScene\\Texture\\Texture.anim", "BlueGround");
-	m_pGreyUv = new Lib::AnimUvController();
+	m_pGreyUv = Lib::MakeUnique<Lib::AnimUvController>();
 	m_pGreyUv->LoadAnimation("Resource\\GameScene\\Texture\\Texture.anim", "GreyGround");
 
-	m_pVertex = new Lib::Vertex2D(
+	m_pVertex = Lib::MakeUnique<Lib::Vertex2D>(
 		SINGLETON_INSTANCE(Lib::DX11Manager).GetDevice(),
 		SINGLETON_INSTANCE(Lib::DX11Manager).GetDeviceContext(),
 		SINGLETON_INSTANCE(Lib::Window).GetWindowSize());

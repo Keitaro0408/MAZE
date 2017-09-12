@@ -19,7 +19,7 @@ GameBackGround::GameBackGround()
 	m_Uv[2] = Lib::VECTOR2(0, 1);
 	m_Uv[3] = Lib::VECTOR2(1, 1);
 
-	m_pVertex = new Lib::Vertex2D(
+	m_pVertex = Lib::MakeUnique<Lib::Vertex2D>(
 		SINGLETON_INSTANCE(Lib::DX11Manager).GetDevice(),
 		SINGLETON_INSTANCE(Lib::DX11Manager).GetDeviceContext(),
 		SINGLETON_INSTANCE(Lib::Window).GetWindowSize());

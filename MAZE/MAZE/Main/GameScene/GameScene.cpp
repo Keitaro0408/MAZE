@@ -38,17 +38,8 @@ bool GameScene::Initialize()
 {
 	m_FrameCount = 0;
 	int dummy = 0;
-	SINGLETON_CREATE(Lib::EventManager);
 	SINGLETON_INSTANCE(GamePlayManager).NextStage();
 	SINGLETON_INSTANCE(GamePlayManager).StageLoad();
-
-	SINGLETON_CREATE(Lib::TextureManager);
-	SINGLETON_INSTANCE(Lib::TextureManager).
-		Initialize(SINGLETON_INSTANCE(Lib::DX11Manager).GetDevice());
-
-	SINGLETON_CREATE(Lib::DSoundManager);
-	SINGLETON_INSTANCE(Lib::DSoundManager).
-		Initialize(SINGLETON_INSTANCE(Lib::Window).GetWindowHandle());
 
 	SINGLETON_INSTANCE(Lib::TextureManager).Load("Resource\\GameScene\\Texture\\GameBackGround.png", &dummy);
 	SINGLETON_INSTANCE(Lib::TextureManager).Load("Resource\\GameScene\\Texture\\Texture.png", &dummy);
@@ -57,28 +48,29 @@ bool GameScene::Initialize()
 	SINGLETON_INSTANCE(Lib::DSoundManager).LoadSound("Resource\\GameScene\\Sound\\Landing.wav", &dummy);
 	SINGLETON_INSTANCE(Lib::DSoundManager).LoadSound("Resource\\GameScene\\Sound\\CoinGet.wav", &dummy);
 
-	m_pGameObjectManager = new GameObjectManager();
-	m_pUIObjectManager = new UIObjectManager();
+	m_pGameObjectManager = Lib::MakeUnique<GameObjectManager>();
+	m_pUIObjectManager = Lib::MakeUnique<UIObjectManager>();
 
 	return true;
 }
 
 void GameScene::Finalize()
 {
-	Lib::SafeDelete(m_pUIObjectManager);
-	Lib::SafeDelete(m_pGameObjectManager);
+	m_pUIObjectManager.Reset();
+	m_pGameObjectManager.Reset();
 	for (int i = 0; i < ResourceId::Game::TEX_MAX; i++)
 	{
 		SINGLETON_INSTANCE(Lib::TextureManager).ReleaseTexture(i);
 	}
+	SINGLETON_INSTANCE(Lib::TextureManager).ClearResource();
+
 	for (int i = 0; i < ResourceId::Game::SOUND_MAX; i++)
 	{
 		SINGLETON_INSTANCE(Lib::DSoundManager).ReleaseSound(i);
 	}
-	SINGLETON_INSTANCE(Lib::DSoundManager).Finalize();
-	SINGLETON_DELETE(Lib::DSoundManager);
-	SINGLETON_DELETE(Lib::TextureManager);
-	SINGLETON_DELETE(Lib::EventManager);
+	SINGLETON_INSTANCE(Lib::DSoundManager).ClearResource();
+
+	SINGLETON_INSTANCE(Lib::EventManager).AllEventRelease();
 }
 
 void GameScene::Execute()

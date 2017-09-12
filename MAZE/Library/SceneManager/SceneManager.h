@@ -51,7 +51,8 @@ namespace Lib
 
 	private:
 		SceneManager();
-		~SceneManager() = default;
+
+		~SceneManager();
 
 		/**
 		 * SceneManagerの実行

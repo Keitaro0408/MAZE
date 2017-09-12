@@ -26,16 +26,12 @@ ApplicationBase(TEXT("MAZE"), 1920, 1080)
 
 void App::Initialize()
 {
-	::ImmDisableIME(NULL);
 	SINGLETON_INSTANCE(Lib::Window).ChangeWindowSize(1280,720);
 	SINGLETON_CREATE(GamePlayManager);
-	m_pScene.push_back(new TitleScene());
-	m_pScene.push_back(new GameScene());
-	m_pScene.push_back(new NextStageScene());
-	
-	SINGLETON_INSTANCE(Lib::SceneManager).AddScene(m_pScene[TITLE_SCENE]);
-	SINGLETON_INSTANCE(Lib::SceneManager).AddScene(m_pScene[GAME_SCENE]);
-	SINGLETON_INSTANCE(Lib::SceneManager).AddScene(m_pScene[NEXT_STAGE_SCENE]);
+	m_pScene[TITLE_SCENE] = Lib::MakeUnique<TitleScene>();
+	m_pScene[GAME_SCENE] = Lib::MakeUnique<GameScene>();
+	m_pScene[NEXT_STAGE_SCENE] = Lib::MakeUnique<NextStageScene>();
+
 	SINGLETON_INSTANCE(Lib::SceneManager).ChangeScene("GameScene");
 
 	SINGLETON_INSTANCE(Lib::KeyDevice).KeyCheckEntry("RightMove", DIK_RIGHTARROW);
@@ -49,10 +45,5 @@ void App::Initialize()
 
 void App::Finalize()
 {
-	for (int i = 0; i < SCENE_MAX; i++)
-	{
-		m_pScene[i]->Finalize();
-		Lib::SafeDelete(m_pScene[i]);
-	}
 	SINGLETON_DELETE(GamePlayManager);
 }

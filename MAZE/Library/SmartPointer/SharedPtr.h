@@ -78,9 +78,9 @@ namespace Lib
 	};
 
 	template<typename Type, class... Args>
-	SharedPtr<Type> MakeShared(Args&&... args)
+	Type* MakeShared(Args&&... args)
 	{
-		return SharedPtr<Type>(new Type(std::forward<Args>(args)...));
+		return new Type(std::forward<Args>(args)...);
 	}
 
 #include "SharedPtr_private.h"

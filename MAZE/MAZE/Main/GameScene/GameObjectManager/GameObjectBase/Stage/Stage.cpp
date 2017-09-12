@@ -30,15 +30,15 @@ m_TextureIndex(0)
 	m_Uv[3] = Lib::VECTOR2(1, 1);
 	CreateShaderResorceView();
 	
-	m_pGameObjectBase[0] = new Ground();
-	m_pGameObjectBase[1] = new Ladder();
-	m_pGameObjectBase[2] = new Door();
-	m_pGameObjectBase[3] = new Needle();
-	m_pGameObjectBase[4] = new Coin();
-	m_pGameObjectBase[5] = new Cover();
-	m_pGameObjectBase[6] = new Trampoline();
+	m_pGameObjectBase[0] = Lib::MakeUnique<Ground>();
+	m_pGameObjectBase[1] = Lib::MakeUnique<Ladder>();
+	m_pGameObjectBase[2] = Lib::MakeUnique<Door>();
+	m_pGameObjectBase[3] = Lib::MakeUnique<Needle>();
+	m_pGameObjectBase[4] = Lib::MakeUnique<Coin>();
+	m_pGameObjectBase[5] = Lib::MakeUnique<Cover>();
+	m_pGameObjectBase[6] = Lib::MakeUnique<Trampoline>();
 
-	m_pVertex = new Lib::Vertex2D(
+	m_pVertex = Lib::MakeUnique<Lib::Vertex2D>(
 		SINGLETON_INSTANCE(Lib::DX11Manager).GetDevice(),
 		SINGLETON_INSTANCE(Lib::DX11Manager).GetDeviceContext(),
 		SINGLETON_INSTANCE(Lib::Window).GetWindowSize());
@@ -115,7 +115,6 @@ void Stage::Update()
 		{
 			m_Angle = stageAngle;
 			stage = SINGLETON_INSTANCE(GamePlayManager).RightSpin(stage);
-			//SINGLETON_INSTANCE(GamePlayManager).SetSelectStage(stage);
 			SINGLETON_INSTANCE(GamePlayManager).SetIsSpin(false);
 		}
 		break;
@@ -126,7 +125,6 @@ void Stage::Update()
 		{
 			m_Angle = stageAngle;
 			stage = SINGLETON_INSTANCE(GamePlayManager).LeftSpin(stage);
-			//SINGLETON_INSTANCE(GamePlayManager).SetSelectStage(stage);
 			SINGLETON_INSTANCE(GamePlayManager).SetIsSpin(false);
 		}
 		break;
@@ -139,7 +137,6 @@ void Stage::Update()
 			m_Angle = stageAngle;
 			stage = SINGLETON_INSTANCE(GamePlayManager).LeftSpin(stage);
 			stage = SINGLETON_INSTANCE(GamePlayManager).LeftSpin(stage);
-			//SINGLETON_INSTANCE(GamePlayManager).SetSelectStage(stage);
 			SINGLETON_INSTANCE(GamePlayManager).SetIsSpin(false);
 		}
 		break;
@@ -153,7 +150,6 @@ void Stage::Update()
 		{
 			m_Angle -= m_SpinSpeed;
 		}
-		//m_AddAngleCount += m_SpinSpeed;
 		if (m_Angle >= 0 && tmpAngle <= 0 || 
 			m_Angle <= 0 && tmpAngle >= 0)
 		{	

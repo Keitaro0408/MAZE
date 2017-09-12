@@ -50,11 +50,12 @@ namespace Lib
 		void ReleaseTexture(int _index);
 
 		/**
-		 * 開放処理
+		 * リソースを解放する
 		 */
-		inline void Release()
+		inline void ClearResource()
 		{
 			m_pTextureResourceView.clear();
+			m_pTextureResourceView.shrink_to_fit();
 		}
 
 	private:

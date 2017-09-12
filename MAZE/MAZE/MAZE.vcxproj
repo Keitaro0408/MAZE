@@ -99,7 +99,6 @@
     <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Coin\Coin.cpp" />
     <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Door\Door.cpp" />
     <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Ladder\Ladder.cpp" />
-    <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\GameObjectBase.cpp" />
     <ClCompile Include="Main\GamePlayManager\GamePlayManager.cpp" />
     <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Ground\Ground.cpp" />
     <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\Player\Player.cpp" />
@@ -112,7 +111,6 @@
     <ClCompile Include="Main\GameScene\UIObjectManager\UIObjectManager.cpp" />
     <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Stage.cpp" />
     <ClCompile Include="Main\GameScene\UIObjectManager\UIObjectBase\Timer\TimerUI.cpp" />
-    <ClCompile Include="Main\GameScene\UIObjectManager\UIObjectBase\UIObjectBase.cpp" />
     <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Needle\Needle.cpp" />
     <ClCompile Include="Main\NextStageScene\NextStageScene.cpp" />
   </ItemGroup>

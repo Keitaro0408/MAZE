@@ -53,9 +53,9 @@ namespace Lib
 	};
 
 	template<typename Type, class... Args>
-	UniquePtr<Type> MakeUnique(Args&&... args)
+	Type* MakeUnique(Args&&... args)
 	{
-		return UniquePtr<Type>(new Type(std::forward<Args>(args)...));
+		return new Type(std::forward<Args>(args)...);
 	}
 
 #include "UniquePtr_private.h"

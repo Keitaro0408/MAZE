@@ -9,7 +9,7 @@
 
 UIObjectManager::UIObjectManager()
 {
-	m_pUIObjectBase[0] = new TimerUI();
+	m_pUIObjectBase[0] = Lib::MakeUnique<TimerUI>();
 }
 
 

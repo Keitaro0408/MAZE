@@ -15,12 +15,12 @@ Door::Door()
 {
 	m_Stage = SINGLETON_INSTANCE(GamePlayManager).GetSelectStage();
 
-	m_pStartDoorUv = new Lib::AnimUvController();
+	m_pStartDoorUv = Lib::MakeUnique<Lib::AnimUvController>();
 	m_pStartDoorUv->LoadAnimation("Resource\\GameScene\\Texture\\Texture.anim", "DoorObj");
-	m_pGoalDoorUv = new Lib::AnimUvController();
+	m_pGoalDoorUv = Lib::MakeUnique<Lib::AnimUvController>();
 	m_pGoalDoorUv->LoadAnimation("Resource\\GameScene\\Texture\\Texture.anim", "DoorObj");
 
-	m_pVertex = new Lib::Vertex2D(
+	m_pVertex = Lib::MakeUnique<Lib::Vertex2D>(
 		SINGLETON_INSTANCE(Lib::DX11Manager).GetDevice(),
 		SINGLETON_INSTANCE(Lib::DX11Manager).GetDeviceContext(),
 		SINGLETON_INSTANCE(Lib::Window).GetWindowSize());

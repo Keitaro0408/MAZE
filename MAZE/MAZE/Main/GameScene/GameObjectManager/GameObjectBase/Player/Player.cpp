@@ -48,7 +48,7 @@ m_JumpPower(15.f)
 	
 
 	m_AddScaleValue = (1.f - m_Scale) / 60;
-	m_pVertex = new Lib::Vertex2D(
+	m_pVertex = Lib::MakeUnique<Lib::Vertex2D>(
 		SINGLETON_INSTANCE(Lib::DX11Manager).GetDevice(),
 		SINGLETON_INSTANCE(Lib::DX11Manager).GetDeviceContext(),
 		SINGLETON_INSTANCE(Lib::Window).GetWindowSize());
@@ -260,7 +260,7 @@ void Player::InitializeEvent()
 
 void Player::LoadAnimation(ANIMATION _animEnum, std::string _animName, int _setAnimFrame)
 {
-	m_pUvController[_animEnum] = new Lib::AnimUvController();
+	m_pUvController[_animEnum] = Lib::MakeUnique<Lib::AnimUvController>();
 	m_pUvController[_animEnum]->LoadAnimation("Resource\\GameScene\\Texture\\Texture.anim", _animName.c_str());
 	m_pUvController[_animEnum]->SetAnimFrame(_setAnimFrame);
 }

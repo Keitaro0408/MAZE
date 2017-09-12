@@ -15,13 +15,13 @@ Needle::Needle()
 {
 	m_Stage = SINGLETON_INSTANCE(GamePlayManager).GetSelectStage();
 
-	m_pGreenNeedle = new Lib::AnimUvController();
+	m_pGreenNeedle = Lib::MakeUnique<Lib::AnimUvController>();
 	m_pGreenNeedle->LoadAnimation("Resource\\GameScene\\Texture\\Texture.anim", "GreenNeedle");
-	m_pBlueNeedle = new Lib::AnimUvController();
+	m_pBlueNeedle = Lib::MakeUnique<Lib::AnimUvController>();
 	m_pBlueNeedle->LoadAnimation("Resource\\GameScene\\Texture\\Texture.anim", "BlueNeedle");
 
 
-	m_pVertex = new Lib::Vertex2D(
+	m_pVertex = Lib::MakeUnique<Lib::Vertex2D>(
 		SINGLETON_INSTANCE(Lib::DX11Manager).GetDevice(),
 		SINGLETON_INSTANCE(Lib::DX11Manager).GetDeviceContext(),
 		SINGLETON_INSTANCE(Lib::Window).GetWindowSize());

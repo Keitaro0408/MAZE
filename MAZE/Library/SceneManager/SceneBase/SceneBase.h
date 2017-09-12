@@ -16,8 +16,7 @@ namespace Lib
 		 * コンストラクタ
 		 * @param[in] _sceneName Sceneの名前
 		 */
-		SceneBase(std::string _sceneName) :
-			m_SceneName(_sceneName){}
+		SceneBase(std::string _sceneName);
 
 		/**
 		 * デストラクタ

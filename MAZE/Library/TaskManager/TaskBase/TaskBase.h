@@ -57,9 +57,8 @@ namespace Lib
 			m_pObject = _object;
 		}
 
-		class TaskCmp
+		struct TaskCmp
 		{
-		public:
 			bool operator()(const TaskBase& _task1, TaskBase& _task2) const
 			{
 				return (_task1.m_Priority < _task2.m_Priority);

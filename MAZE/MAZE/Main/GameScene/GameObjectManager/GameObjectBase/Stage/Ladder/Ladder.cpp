@@ -15,13 +15,13 @@ Ladder::Ladder()
 {
 	m_Stage = SINGLETON_INSTANCE(GamePlayManager).GetSelectStage();
 
-	m_pEndLadderUv = new Lib::AnimUvController();
+	m_pEndLadderUv = Lib::MakeUnique<Lib::AnimUvController>();
 	m_pEndLadderUv->LoadAnimation("Resource\\GameScene\\Texture\\Texture.anim", "EndLadder");
 
-	m_pMiddleLadderUv = new Lib::AnimUvController();
+	m_pMiddleLadderUv = Lib::MakeUnique<Lib::AnimUvController>();
 	m_pMiddleLadderUv->LoadAnimation("Resource\\GameScene\\Texture\\Texture.anim", "MiddleLadder");
 
-	m_pVertex = new Lib::Vertex2D(
+	m_pVertex = Lib::MakeUnique<Lib::Vertex2D>(
 		SINGLETON_INSTANCE(Lib::DX11Manager).GetDevice(),
 		SINGLETON_INSTANCE(Lib::DX11Manager).GetDeviceContext(),
 		SINGLETON_INSTANCE(Lib::Window).GetWindowSize());

@@ -13,10 +13,10 @@ Trampoline::Trampoline()
 {
 	m_Stage = SINGLETON_INSTANCE(GamePlayManager).GetSelectStage();
 
-	m_pUvController = new Lib::AnimUvController();
+	m_pUvController = Lib::MakeUnique<Lib::AnimUvController>();
 	m_pUvController->LoadAnimation("Resource\\GameScene\\Texture\\Texture.anim", "TrampolineObj");
 
-	m_pVertex = new Lib::Vertex2D(
+	m_pVertex = Lib::MakeUnique<Lib::Vertex2D>(
 		SINGLETON_INSTANCE(Lib::DX11Manager).GetDevice(),
 		SINGLETON_INSTANCE(Lib::DX11Manager).GetDeviceContext(),
 		SINGLETON_INSTANCE(Lib::Window).GetWindowSize());

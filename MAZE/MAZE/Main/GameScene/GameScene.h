@@ -7,6 +7,8 @@
 #define GAMESCENE_H
 #include "SceneManager\SceneBase\SceneBase.h"
 
+#include "SmartPointer\UniquePtr.h"
+
 class GameObjectManager;
 class UIObjectManager;
 
@@ -22,10 +24,10 @@ public:
 	void Execute() override;
 
 private:
-	int				   m_FrameCount;
-	int				   m_BGMSoundDelayFrame; //!< ゲームのBGMを鳴らすのに何秒遅らせるか
-	GameObjectManager* m_pGameObjectManager;
-	UIObjectManager*   m_pUIObjectManager;
+	int								  m_FrameCount;
+	int								  m_BGMSoundDelayFrame; //!< ゲームのBGMを鳴らすのに何秒遅らせるか
+	Lib::UniquePtr<GameObjectManager> m_pGameObjectManager;
+	Lib::UniquePtr<UIObjectManager>   m_pUIObjectManager;
 
 };
 

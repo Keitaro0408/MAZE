@@ -76,9 +76,10 @@ namespace Lib
 		/**
 		 * サウンドのバッファーを開放する
 		 */
-		inline void ClearBuffer()
+		inline void ClearResource()
 		{
 			m_pSound.clear();
+			m_pSound.shrink_to_fit();
 		}
 
 	private:

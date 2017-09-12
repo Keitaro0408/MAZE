@@ -11,9 +11,9 @@
 
 GameObjectManager::GameObjectManager()
 {
-	m_pGameObjectBase[0] = new GameBackGround();
-	m_pGameObjectBase[1] = new Stage();
-	m_pGameObjectBase[2] = new Player();
+	m_pGameObjectBase[0] = Lib::MakeUnique<GameBackGround>();
+	m_pGameObjectBase[1] = Lib::MakeUnique<Stage>();
+	m_pGameObjectBase[2] = Lib::MakeUnique<Player>();
 }
 
 GameObjectManager::~GameObjectManager()

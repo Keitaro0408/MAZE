@@ -1,9 +1,12 @@
 ﻿#ifndef APP_H
 #define APP_H
 #include "Application\ApplicationBase.h"
+
+#include <array>
 #include "SceneManager\SceneManager.h"
 #include "SceneManager\SceneBase\SceneBase.h"
-#include <vector>
+#include "SmartPointer\UniquePtr.h"
+
 
 class App : public Lib::ApplicationBase
 {
@@ -23,7 +26,7 @@ public:
 	void Finalize() override;
 
 private:
-	std::vector<Lib::SceneBase*> m_pScene;
+	std::array<Lib::UniquePtr<Lib::SceneBase>, SCENE_MAX> m_pScene;
 
 } App;
 

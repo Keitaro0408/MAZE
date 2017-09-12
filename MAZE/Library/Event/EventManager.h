@@ -42,6 +42,11 @@ namespace Lib
 		 */
 		bool CallEvent(std::string _eventName);
 
+		/**
+		 * 登録されているイベントを解放する
+		 */
+		void AllEventRelease();
+
 	private:
 		EventManager(){};
 		~EventManager(){};

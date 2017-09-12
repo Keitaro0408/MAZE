@@ -19,9 +19,9 @@ m_Time(300),
 m_Count(0),
 m_IsStart(false)
 {
-	m_pUvController = new Lib::AnimUvController();
+	m_pUvController = Lib::MakeUnique<Lib::AnimUvController>();
 	m_pUvController->LoadAnimation("Resource\\GameScene\\Texture\\Texture.anim","Number");
-	m_pVertex = new Lib::Vertex2D(
+	m_pVertex = Lib::MakeUnique<Lib::Vertex2D>(
 		SINGLETON_INSTANCE(Lib::DX11Manager).GetDevice(),
 		SINGLETON_INSTANCE(Lib::DX11Manager).GetDeviceContext(),
 		SINGLETON_INSTANCE(Lib::Window).GetWindowSize());

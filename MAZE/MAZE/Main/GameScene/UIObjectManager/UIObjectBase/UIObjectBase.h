@@ -10,9 +10,6 @@ public:
 	UIObjectBase() = default;
 	virtual ~UIObjectBase() = default;
 
-	void InitializeTask(int _updateTask = 0, int _drawTask = 0);
-	void FinalizeTask();
-
 	virtual void Update() = 0;
 	virtual void Draw() = 0;
 
