@@ -73,7 +73,7 @@ void Lib::DX11Manager::BeginScene()
 
 void Lib::DX11Manager::EndScene()
 {
-	m_pDXGISwapChain->Present(1, 0);
+	m_pDXGISwapChain->Present(0, 0);
 }
 
 void Lib::DX11Manager::SetDepthStencilTest(bool _isStencil)

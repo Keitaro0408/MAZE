@@ -4,7 +4,9 @@
  * @author kotani
  */
 #include "GamePlayManager.h"
+#include "GamePlayEventListener.h"
 #include "../GameScene/GameObjectManager/GameObjectBase/Stage/Stage.h"
+
 
 #include "Event\EventManager.h"
 #include <string>
@@ -200,6 +202,9 @@ GamePlayManager::SELECT_STAGE GamePlayManager::RightSpin(const SELECT_STAGE& _st
 
 void GamePlayManager::InitializeEvent()
 {
+	m_pGamePlayEventListener.Reset();
+	m_pGamePlayEventListener = Lib::MakeUnique<GamePlayEventListener>();
+
 	m_StageAngle = 0.f;
 	for (int i = 0; i < STAGE_HEIGHT; i++)
 	{
@@ -208,74 +213,6 @@ void GamePlayManager::InitializeEvent()
 			m_SelectStage.Data[i][j] = 0;
 		}
 	}
-
-	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("PlayerRespawn", [this]()
-	{
-		while (m_StageAngle != 0)
-		{
-			if (m_StageAngle < 0)
-			{
-				m_StageAngle += 90;
-				m_SelectStage = SINGLETON_INSTANCE(GamePlayManager).RightSpin(m_SelectStage);
-			}
-			else if (m_StageAngle > 0)
-			{
-				m_StageAngle -= 90;
-				m_SelectStage = SINGLETON_INSTANCE(GamePlayManager).LeftSpin(m_SelectStage);
-			}
-		}
-
-		m_StageAngle = 0;
-		m_IsSpin = true;
-	});
-
-	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("LeftSpin", [this]()
-	{
-		m_IsSpin = true;
-		m_StageAngle -= 90.f;
-		m_Angle -= 90.f;
-		if (m_StageAngle <= -360 ||
-			m_StageAngle >= 360)
-		{
-			m_StageAngle = 0;
-		}
-		m_SelectStage = LeftSpin(m_SelectStage);
-	});
-
-	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("RightSpin", [this]()
-	{
-		m_IsSpin = true;
-		//m_StageAngle += 90.f;
-		m_StageAngle += 90.f;
-		if (m_StageAngle <= -360 ||
-			m_StageAngle >= 360)
-		{
-			m_StageAngle = 0;
-		}
-
-		m_SelectStage = RightSpin(m_SelectStage);
-	});
-
-	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("ReversalSpin", [this]()
-	{
-		m_IsSpin = true;
-		//m_StageAngle += 180.f;
-		m_StageAngle += 90.f;
-		if (m_StageAngle <= -360 ||
-			m_StageAngle >= 360)
-		{
-			m_StageAngle = 0;
-		}
-		m_StageAngle += 90.f;
-		if (m_StageAngle <= -360 ||
-			m_StageAngle >= 360)
-		{
-			m_StageAngle = 0;
-		}
-		m_SelectStage = RightSpin(m_SelectStage);
-		m_SelectStage = RightSpin(m_SelectStage);
-	});
-
 }
 
 void GamePlayManager::NextStage()

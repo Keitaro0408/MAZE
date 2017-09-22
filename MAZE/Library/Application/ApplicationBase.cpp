@@ -28,7 +28,8 @@ namespace Lib
 	ApplicationBase::ApplicationBase(LPCTSTR _appName, int _windowWidth, int _windowHeight) :
 		m_AppName(_appName),
 		m_WindowWidth(_windowWidth),
-		m_WindowHeight(_windowHeight)
+		m_WindowHeight(_windowHeight),
+		m_RefreshRate(60)
 	{
 		::ImmDisableIME(NULL);
 		m_pInstance = this;
@@ -57,6 +58,7 @@ namespace Lib
 		ZeroMemory(&Msg, sizeof(Msg));
 		while (Msg.message != WM_QUIT)
 		{
+
 			if (PeekMessage(&Msg, nullptr, 0U, 0U, PM_REMOVE))
 			{
 				TranslateMessage(&Msg);
@@ -78,6 +80,18 @@ namespace Lib
 
 	bool ApplicationBase::MainLoop()
 	{
+		static LARGE_INTEGER Time1;
+		LARGE_INTEGER Frq, Time2;
+		double TotalTime = 0;
+		QueryPerformanceFrequency(&Frq);
+		double MicroSec = 1000000 / (double)Frq.QuadPart;
+
+		while (TotalTime<(1000000 / m_RefreshRate))
+		{
+			QueryPerformanceCounter(&Time2);
+			TotalTime = (Time2.QuadPart - Time1.QuadPart)*MicroSec;
+		}
+		QueryPerformanceCounter(&Time1);
 		return SINGLETON_INSTANCE(Lib::SceneManager).Execute();
 	}
 
@@ -113,6 +127,10 @@ namespace Lib
 		SINGLETON_INSTANCE(Lib::TextureManager).
 			Initialize(SINGLETON_INSTANCE(Lib::DX11Manager).GetDevice());
 
+		SINGLETON_CREATE(Lib::ShaderManager);
+		SINGLETON_INSTANCE(Lib::ShaderManager).
+			Initialize(SINGLETON_INSTANCE(Lib::DX11Manager).GetDevice());
+
 		SINGLETON_CREATE(Lib::EventManager);
 
 		SINGLETON_CREATE(Lib::SceneManager);
@@ -123,6 +141,8 @@ namespace Lib
 		SINGLETON_DELETE(Lib::SceneManager);
 
 		SINGLETON_DELETE(Lib::EventManager);
+
+		SINGLETON_DELETE(Lib::ShaderManager);
 
 		SINGLETON_DELETE(Lib::TextureManager);
 

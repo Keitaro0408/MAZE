@@ -4,6 +4,7 @@
  * @author kotani
  */
 #include "Coin.h"
+#include "CoinEventListener.h"
 
 #include "Event\EventManager.h"
 #include "Window\Window.h"
@@ -28,28 +29,7 @@ Coin::Coin()
 	m_pVertex->SetTexture(
 		SINGLETON_INSTANCE(Lib::TextureManager).GetTexture(ResourceId::Game::UNITY_TEX));
 
-	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("CoinGet", [this]()
-	{
-		// 各オブジェクトの描画に使っている配列データは回転を反映していないのでここで合わせる
-		m_Stage = SINGLETON_INSTANCE(GamePlayManager).GetSelectStage();
-		float stageAngle = SINGLETON_INSTANCE(GamePlayManager).GetStageAngle();
-		while (stageAngle != 0)
-		{
-			if (stageAngle < 0)
-			{
-				stageAngle += 90;
-				m_Stage = SINGLETON_INSTANCE(GamePlayManager).RightSpin(m_Stage);
-			}
-			else if (stageAngle > 0)
-			{
-				stageAngle -= 90;
-				m_Stage = SINGLETON_INSTANCE(GamePlayManager).LeftSpin(m_Stage);
-			}
-		}
-		
-		SINGLETON_INSTANCE(Lib::DSoundManager).SoundOperation(ResourceId::Game::COIN_SE, Lib::DSoundManager::SOUND_STOP_RESET);
-		SINGLETON_INSTANCE(Lib::DSoundManager).SoundOperation(ResourceId::Game::COIN_SE, Lib::DSoundManager::SOUND_PLAY);
-	});
+	m_pCoinEventListener = Lib::MakeUnique<CoinEventListener>(this);
 }
 
 Coin::~Coin()

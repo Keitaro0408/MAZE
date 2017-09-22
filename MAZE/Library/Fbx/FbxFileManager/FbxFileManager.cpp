@@ -31,7 +31,8 @@ m_pFbxLoader(nullptr)
 
 bool Lib::FbxFileManager::Initialize(ID3D11Device* _pDevice, ID3D11DeviceContext* _pDeviceContext)
 {
-	FbxFileManager(_pDevice, _pDeviceContext);
+	m_pDevice = _pDevice;
+	m_pDeviceContext = _pDeviceContext;
 	if (m_pFbxLoader != nullptr)
 	{
 		MessageBox(nullptr, TEXT("既にFbxFileManagerクラスは初期化されています"), TEXT("エラー"), MB_ICONSTOP);

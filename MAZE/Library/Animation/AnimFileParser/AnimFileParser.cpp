@@ -15,13 +15,15 @@ void Lib::AnimFileParser::FileLoad(LPCTSTR _pFileName)
 	ReleaseLoadBuffer();
 	fopen_s(&m_pFile, _pFileName, "r");
 	fseek(m_pFile, 0, SEEK_END);
-	m_FileSize = ftell(m_pFile);
+	m_FileSize = ftell(m_pFile) + 1;
 	fseek(m_pFile, 0, SEEK_SET);
 
 	m_pBuffer = new TCHAR[m_FileSize];
 	m_pTmpBuffer = new TCHAR[m_FileSize];
 	memset(m_pBuffer, '\0', m_FileSize);
 	memset(m_pTmpBuffer, '\0', m_FileSize);
+	m_pBuffer[m_FileSize - 1] = '\0';
+	m_pTmpBuffer[m_FileSize - 1] = '\0';
 
 	fread(m_pBuffer, m_FileSize, 1, m_pFile);
 	fclose(m_pFile);

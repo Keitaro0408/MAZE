@@ -6,15 +6,15 @@
 #ifndef EVENTMANAGER_H
 #define EVENTMANAGER_H
 
-#include <map>
-#include <vector>
+#include <list>
 #include <functional>
-#include "EventListnerBase.h"
 #include "..\Singleton.h"
-
+#include "Event.h"
 
 namespace Lib
 {
+	class EventListenerBase;
+
 	/**
 	 * コールバックのイベントを管理する
 	 */
@@ -24,33 +24,38 @@ namespace Lib
 	public:
 		/**
 		 * イベントの追加
-		 * @param[in] _eventName イベントの名前
-		 * @param[in] _pEvent 実行されるクラス
+		 * @param[in] _pEventListnerBaseList イベント待受クラス
 		 */
-		void AddEvent(std::string _eventName, EventListnerBase* _pEvent);
+		void AddListener(EventListenerBase* _pEventListenerBaseList);
 
 		/**
-		 * イベントの追加
-		 * @param[in] _eventName イベントの名前
-		 * @param[in] _event 実行される関数
+		 * イベントを送信する
+		 * @param[in] _pEvent イベントクラス
 		 */
-		void AddEvent(std::string _eventName, std::function<void()> _event);
+		void SendEvent(Event& _pEvent);
 
 		/**
-		 * イベントを呼ぶ
-		 * @param[in] イベントの名前
+		 * キューにイベントをセットする
+		 * @param[in] _pEvent イベントクラス
 		 */
-		bool CallEvent(std::string _eventName);
+		void AddQueueEvent(Event* _pEvent);
 
 		/**
-		 * 登録されているイベントを解放する
+		 * キューに登録しているイベントを実行して、キューを削除する。
 		 */
-		void AllEventRelease();
+		void Execute();
+
+		/**
+		 * 登録されている全てのイベントをリストから削除する
+		 */
+		void AllEventClear();
 
 	private:
 		EventManager(){};
 		~EventManager(){};
-		std::map<std::string, std::vector<std::function<void()> > > m_pEvent;
+
+		std::list<EventListenerBase*> m_pEventListenerBase;
+		std::list<Event>			  m_pEventQueueList;
 	};
 }
 

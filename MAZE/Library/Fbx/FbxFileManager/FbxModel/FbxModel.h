@@ -7,6 +7,7 @@
 #define FBXMODEL_H
 #include <D3DX11.h>
 #include <D3DX10.h>
+#include "../../../Math/Math.h"
 #include <vector>
 
 namespace Lib
@@ -22,9 +23,9 @@ namespace Lib
 		*/
 		struct FBXMODEL_VERTEX
 		{
-			D3DXVECTOR3 Pos;	//!< 頂点座標 
-			D3DXVECTOR3	Normal;	//!< 法線ベクトル
-			D3DXVECTOR2 Texel;	//!< テクスチャ座標
+			Lib::VECTOR3 Pos;	//!< 頂点座標 
+			Lib::VECTOR3 Normal;	//!< 法線ベクトル
+			Lib::VECTOR2 Texel;	//!< テクスチャ座標
 		};
 
 		/**
@@ -36,7 +37,7 @@ namespace Lib
 			int				PolygonVertexNum;	//!< Meshの総頂点数
 			int*			pIndexAry;			//!< インデックスバッファ
 			int				ControlPositionNum;	//!< インデックスバッファが指す頂点の数
-			D3DXVECTOR3*	pVertex;			//!< インデックスが参照する頂点
+			Lib::VECTOR3*	pVertex;			//!< インデックスが参照する頂点
 		};
 
 		/**
@@ -44,7 +45,7 @@ namespace Lib
 		*/
 		struct NORMAL_DATA
 		{
-			D3DXVECTOR3* pNormalVec; //!< 法線ベクトルの配列
+			Lib::VECTOR3* pNormalVec; //!< 法線ベクトルの配列
 		};
 
 		/**
@@ -52,11 +53,17 @@ namespace Lib
 		*/
 		struct MATERIAL
 		{
-			D3DXCOLOR	Diffuse;	//!< ディフューズ反射
-			D3DXCOLOR	Ambient;	//!< アンビエント反射
-			D3DXCOLOR	Specular;	//!< スペキュラ反射
-			D3DXCOLOR	Emissive;	//!< エミッシブ
+			Lib::COLOR	Diffuse;	//!< ディフューズ反射
+			Lib::COLOR	Ambient;	//!< アンビエント反射
+			Lib::COLOR	Specular;	//!< スペキュラ反射
+			Lib::COLOR	Emissive;	//!< エミッシブ
 			float		Power;		//!< スペキュラ強度
+		};
+
+		struct TEXTURE_UV_DATA
+		{
+			LPCTSTR			pUVSetName;	//!< UVセットの名前(テクスチャ座標とテクスチャを紐づける)
+			Lib::VECTOR2*	pTextureUV;	//!< テクスチャ座標
 		};
 
 		/**
@@ -64,16 +71,16 @@ namespace Lib
 		*/
 		struct TEXTURE_DATA
 		{
-			LPCTSTR			pUVSetName;	//!< UVセットの名前(テクスチャ座標とテクスチャを紐づける)
-			D3DXVECTOR2*	pTextureUV;	//!< テクスチャ座標
+			TEXTURE_UV_DATA* pTextureUVData;
+			int TextureUVCount;
 		};
 
 		/**
 		* Fbxから取得するマテリアル構造体
 		*/
-		struct MaterialData
+		struct MATERIAL_DATA
 		{
-			MATERIAL*					pMaterial;			//!< メッシュのマテリアル
+			MATERIAL					pMaterial;			//!< メッシュのマテリアル
 			int							TextureCount;		//!< マテリアルに紐づいているテクスチャの数
 			LPCTSTR*					pTextureName;		//!< マテリアルに紐づいているテクスチャの名前が格納された配列
 			LPCTSTR*					pTextureUVSetName;	//!< マテリアルに紐づいているテクスチャとUVを結びつける文字列が格納された配列
@@ -85,8 +92,10 @@ namespace Lib
 		*/
 		struct MESH_DATA
 		{
-			VERTEX_DATA* pVertexData;	//!< メッシュの頂点情報
-			NORMAL_DATA* pNormalData;	//!< メッシュの法線情報
+			VERTEX_DATA*	pVertexData;	//!< メッシュの頂点情報
+			NORMAL_DATA*	pNormalData;	//!< メッシュの法線情報
+			TEXTURE_DATA*	pTextureData;	//!< テクスチャの情報
+			MATERIAL_DATA*	pMaterialData;	//!< マテリアルの情報
 		};
 
 		FbxModel(ID3D11Device* _pDevice, ID3D11DeviceContext* _pDeviceContext);
@@ -152,6 +161,12 @@ namespace Lib
 		bool InitVertexBuffer();
 
 		/**
+		* サンプラステートの初期化する
+		* @return 初期化に成功したらtrue
+		*/
+		bool InitSamplerState();
+
+		/**
 		* インデックスバッファの解放
 		*/
 		void ReleaseIndexBuffer();
@@ -161,12 +176,18 @@ namespace Lib
 		*/
 		void ReleaseVertexBuffer();
 
+		/**
+		* サンプラステートの解放
+		*/
+		void ReleaseSamplerState();
+
 		ID3D11Device* const			m_pDevice;
 		ID3D11DeviceContext* const	m_pDeviceContext;
 		std::vector<MESH_DATA>		m_MeshData;
 		ID3D11Buffer**				m_ppIndexBuffer;
 		ID3D11Buffer**				m_ppVertexBuffer;
 		FBXMODEL_VERTEX**			m_ppVertexData;
+		ID3D11SamplerState*			m_pSamplerState;
 
 	};
 }

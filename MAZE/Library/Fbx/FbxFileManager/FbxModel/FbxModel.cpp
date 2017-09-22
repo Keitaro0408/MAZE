@@ -41,30 +41,66 @@ namespace Lib
 			return false;
 		}
 
+		if (!InitSamplerState())
+		{
+			OutputDebugString(TEXT("サンプラステートの初期化に失敗しました\n"));
+			return false;
+		}
+
 		return true;
 	}
 
 	void FbxModel::Release()
 	{
+		ReleaseSamplerState();
 		ReleaseVertexBuffer();
 		ReleaseIndexBuffer();
 
 		for (unsigned int i = 0; i < m_MeshData.size(); i++)
 		{
+			delete[] m_MeshData[i].pMaterialData->pTextureName;
+			m_MeshData[i].pMaterialData->pTextureName = NULL;
+
+			delete[] m_MeshData[i].pMaterialData->pTextureUVSetName;
+			m_MeshData[i].pMaterialData->pTextureUVSetName = NULL;
+
+			for (int n = 0; n < m_MeshData[i].pMaterialData->TextureCount; n++)
+			{
+				m_MeshData[i].pMaterialData->pTextureView[n]->Release();
+			}
+
+			delete[] m_MeshData[i].pMaterialData->pTextureView;
+			m_MeshData[i].pMaterialData->pTextureView = NULL;
+
+			delete[] m_MeshData[i].pMaterialData;
+			m_MeshData[i].pMaterialData = NULL;
+
+			for (int n = 0; n < m_MeshData[i].pTextureData->TextureUVCount; n++)
+			{
+				delete[] m_MeshData[i].pTextureData->pTextureUVData[n].pTextureUV;
+				m_MeshData[i].pTextureData->pTextureUVData[n].pTextureUV = NULL;
+			}
+
+			delete[] m_MeshData[i].pTextureData->pTextureUVData;
+			m_MeshData[i].pTextureData->pTextureUVData = NULL;
+
+			delete m_MeshData[i].pTextureData;
+			m_MeshData[i].pTextureData = NULL;
+
 			delete[] m_MeshData[i].pNormalData->pNormalVec;
-			m_MeshData[i].pNormalData->pNormalVec = nullptr;
+			m_MeshData[i].pNormalData->pNormalVec = NULL;
 
 			delete m_MeshData[i].pNormalData;
-			m_MeshData[i].pNormalData = nullptr;
+			m_MeshData[i].pNormalData = NULL;
 
 			delete[] m_MeshData[i].pVertexData->pVertex;
-			m_MeshData[i].pVertexData->pVertex = nullptr;
+			m_MeshData[i].pVertexData->pVertex = NULL;
 
 			delete[] m_MeshData[i].pVertexData->pIndexAry;
-			m_MeshData[i].pVertexData->pIndexAry = nullptr;
+			m_MeshData[i].pVertexData->pIndexAry = NULL;
 
 			delete m_MeshData[i].pVertexData;
-			m_MeshData[i].pVertexData = nullptr;
+			m_MeshData[i].pVertexData = NULL;
 		}
 	}
 
@@ -72,9 +108,13 @@ namespace Lib
 	{
 		UINT stride = sizeof(FBXMODEL_VERTEX);
 		UINT offset = 0;
+
 		m_pDeviceContext->IASetVertexBuffers(0, 1, &m_ppVertexBuffer[_meshNum], &stride, &offset);
 		m_pDeviceContext->IASetIndexBuffer(m_ppIndexBuffer[_meshNum], DXGI_FORMAT_R32_UINT, 0);
-		m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+		m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+		m_pDeviceContext->PSSetSamplers(0, 1, &m_pSamplerState);
+		m_pDeviceContext->PSSetShaderResources(0, 1, &m_MeshData[_meshNum].pMaterialData->pTextureView[0]);
 
 		m_pDeviceContext->DrawIndexed(m_MeshData[_meshNum].pVertexData->PolygonVertexNum, 0, 0);
 	}
@@ -131,7 +171,7 @@ namespace Lib
 					m_ppIndexBuffer[i]->Release();
 				}
 				delete[] m_ppIndexBuffer;
-				m_ppIndexBuffer = nullptr;
+				m_ppIndexBuffer = NULL;
 				return false;
 			}
 		}
@@ -149,8 +189,10 @@ namespace Lib
 		for (unsigned int MeshIndex = 0; MeshIndex < m_MeshData.size(); MeshIndex++)
 		{
 			int ControlPositionNum = m_MeshData[MeshIndex].pVertexData->ControlPositionNum;	// メッシュのインデックスバッファが指す総頂点数
-			D3DXVECTOR3* pVertex = m_MeshData[MeshIndex].pVertexData->pVertex;				// メッシュが持つ頂点座標の配列
-			D3DXVECTOR3* pNormal = m_MeshData[MeshIndex].pNormalData->pNormalVec;			// メッシュが持つ法線ベクトルの配列
+			Lib::VECTOR3* pVertex = m_MeshData[MeshIndex].pVertexData->pVertex;				// メッシュが持つ頂点座標の配列
+			Lib::VECTOR3* pNormal = m_MeshData[MeshIndex].pNormalData->pNormalVec;			// メッシュが持つ法線ベクトルの配列
+
+			Lib::VECTOR2* pUVVertex = m_MeshData[MeshIndex].pTextureData->pTextureUVData[0].pTextureUV;	// メッシュが持つテクスチャ座標の配列
 
 			m_ppVertexData[MeshIndex] = new FBXMODEL_VERTEX[ControlPositionNum];
 
@@ -158,10 +200,7 @@ namespace Lib
 			{
 				m_ppVertexData[MeshIndex][i].Pos = pVertex[i];
 				m_ppVertexData[MeshIndex][i].Normal = pNormal[i];
-
-				/// @todo インデックスバッファに対するテクスチャ座標の対応がまだなので空データを突っ込んでおく
-				m_ppVertexData[MeshIndex][i].Texel.x = 0.0f;
-				m_ppVertexData[MeshIndex][i].Texel.y = 0.0f;
+				m_ppVertexData[MeshIndex][i].Texel = pUVVertex[i];
 			}
 
 			D3D11_BUFFER_DESC BufferDesc;
@@ -186,7 +225,7 @@ namespace Lib
 					m_ppVertexBuffer[i]->Release();
 				}
 				delete[] m_ppVertexBuffer;
-				m_ppVertexBuffer = nullptr;
+				m_ppVertexBuffer = NULL;
 
 				return false;
 			}
@@ -197,40 +236,76 @@ namespace Lib
 		return true;
 	}
 
+	bool FbxModel::InitSamplerState()
+	{
+		D3D11_SAMPLER_DESC SamplerDesc;
+		ZeroMemory(&SamplerDesc, sizeof(SamplerDesc));
+		SamplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		SamplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+		SamplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		SamplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		SamplerDesc.MipLODBias = 0;
+		SamplerDesc.MaxAnisotropy = 0;
+		SamplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+		for (int i = 0; i < 4; i++)
+		{
+			SamplerDesc.BorderColor[i] = 0.0f;
+		}
+		SamplerDesc.MinLOD = 0;
+		SamplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+		if (FAILED(m_pDevice->CreateSamplerState(&SamplerDesc, &m_pSamplerState)))
+		{
+			MessageBox(NULL, TEXT("サンプラーステートの生成に失敗"), TEXT("エラー"), MB_ICONSTOP);
+			return false;
+		}
+
+		return true;
+	}
+
 	void FbxModel::ReleaseIndexBuffer()
 	{
-		if (m_ppIndexBuffer != nullptr)
+		if (m_ppIndexBuffer != NULL)
 		{
 			for (unsigned int i = 0; i < m_MeshData.size(); i++)
 			{
 				m_ppIndexBuffer[i]->Release();
 			}
 			delete[] m_ppIndexBuffer;
-			m_ppIndexBuffer = nullptr;
+			m_ppIndexBuffer = NULL;
 		}
 	}
 
 	void FbxModel::ReleaseVertexBuffer()
 	{
-		if (m_ppVertexBuffer != nullptr)
+		if (m_ppVertexBuffer != NULL)
 		{
 			for (unsigned int i = 0; i < m_MeshData.size(); i++)
 			{
 				delete m_ppVertexData[i];
-				m_ppVertexData[i] = nullptr;
+				m_ppVertexData[i] = NULL;
 			}
 			delete[] m_ppVertexData;
-			m_ppVertexData = nullptr;
+			m_ppVertexData = NULL;
 		}
 
-		if (m_ppVertexBuffer != nullptr)
+		if (m_ppVertexBuffer != NULL)
 		{
 			for (unsigned int i = 0; i < m_MeshData.size(); i++)
 			{
 				m_ppVertexBuffer[i]->Release();
 				delete[] m_ppVertexBuffer;
-				m_ppVertexBuffer = nullptr;
+				m_ppVertexBuffer = NULL;
 			}
+		}
+	}
+
+	void FbxModel::ReleaseSamplerState()
+	{
+		if (m_pSamplerState != NULL)
+		{
+			m_pSamplerState->Release();
+			m_pSamplerState = NULL;
 		}
 	}
 }

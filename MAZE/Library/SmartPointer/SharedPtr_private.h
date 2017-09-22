@@ -11,8 +11,6 @@ m_pMutex(&m_Mutex)
 
 	m_pWeakCount = new unsigned int;
 	*m_pWeakCount = 1;
-
-	//m_pInstance = _type;
 }
 
 template<typename Type>
@@ -37,7 +35,10 @@ void SharedPtr<Type>::Reset()
 	std::unique_lock<std::recursive_mutex> locker = Locker();
 	SafeDelete(m_pRefCount);
 	SafeDelete(m_pWeakCount);
-	delete m_pInstance;
+	if (m_pInstance != nullptr)
+	{
+		(*m_pDeleter)(m_pInstance);
+	}
 	m_pInstance = nullptr;
 }
 
@@ -47,7 +48,12 @@ void SharedPtr<Type>::Reset(Type* _type)
 	std::unique_lock<std::recursive_mutex> locker = Locker();
 
 	SafeDelete(m_pRefCount);
-	SafeDelete(m_pInstance);
+	if (m_pInstance != nullptr)
+	{
+		(*m_pDeleter)(m_pInstance);
+		m_pInstance = nullptr;
+		m_pDeleter = nullptr;
+	}
 
 	m_pRefCount = new unsigned int;
 	*m_pRefCount = 1;
@@ -55,6 +61,7 @@ void SharedPtr<Type>::Reset(Type* _type)
 	m_pWeakCount = new unsigned int;
 	*m_pWeakCount = 1;
 
+	m_pDeleter = new DeleterImpl<Type>();
 	m_pInstance = _type;
 }
 
@@ -108,9 +115,11 @@ void SharedPtr<Type>::Release()
 
 		if (*m_pRefCount == 0)
 		{
-			SafeDelete(m_pInstance);
-			//SafeDelete(m_pRefCount);
-			//SafeDelete(m_pWeakCount);
+			if (m_pInstance != nullptr)
+			{
+				(*m_pDeleter)(m_pInstance);
+				m_pInstance = nullptr;
+			}
 		}
 
 		if (*m_pWeakCount == 0)

@@ -11,9 +11,6 @@
 
 namespace Lib
 {
-	/**
-	* Fbxの読み込み処理を管理するクラス
-	*/
 	class FbxLoader
 	{
 	public:
@@ -40,7 +37,7 @@ namespace Lib
 
 		/**
 		* Fbxモデルを読み込む
-		* @param[out] _pModel 読み込みに成功した場合はモデルデータが格納される、失敗したらnullptr
+		* @param[out] _pModel 読み込みに成功した場合はモデルデータが格納される、失敗したらNULL
 		* @param[in] _pFileName 読み込むモデルのファイルパス
 		* @return 読み込みに成功したらtrue
 		*/
@@ -143,6 +140,11 @@ namespace Lib
 		* @return 読み込みに成功したらtrue
 		*/
 		bool LoadMeshAnimationData(FbxMesh* _pMesh, FbxModel::MESH_DATA* _pMeshData);
+
+		/**
+		* ファイルから取得したメッシュデータを描画に使用できるようにする
+		*/
+		bool MeshDataConvert(FbxModel::MESH_DATA* _pMeshData);
 
 		/**
 		* テクスチャの名前をマテリアルから取得する関数

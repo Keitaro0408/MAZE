@@ -4,6 +4,8 @@
  * @author kotani
  */
 #include "Door.h"
+#include "DoorEventListener.h"
+
 #include "Window\Window.h"
 #include "Event\EventManager.h"
 #include "Texture\TextureManager.h"
@@ -29,6 +31,8 @@ Door::Door()
 		m_pStartDoorUv->GetUV());
 	m_pVertex->SetTexture(
 		SINGLETON_INSTANCE(Lib::TextureManager).GetTexture(ResourceId::Game::UNITY_TEX));
+
+	m_pDoorEventListener = Lib::MakeUnique<DoorEventListener>(this);
 	InitializeEvent();
 }
 
@@ -103,23 +107,4 @@ void Door::Draw()
 
 void Door::InitializeEvent()
 {
-	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("OpenStartDoor", [this]()
-	{
-		m_pStartDoorUv->SetAnimCount(1);
-	});
-
-	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("CloseStartDoor", [this]()
-	{
-		m_pStartDoorUv->SetAnimCount(0);
-	});
-
-	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("OpenGoalDoor", [this]()
-	{
-		m_pGoalDoorUv->SetAnimCount(1);
-	});
-
-	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("CloseGoalDoor", [this]()
-	{
-		m_pGoalDoorUv->SetAnimCount(0);
-	});
 }

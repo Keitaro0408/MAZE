@@ -7,6 +7,7 @@
 #include "Texture\TextureManager.h"
 #include "..\..\..\..\ResourceId.h"
 #include "..\..\..\..\GamePlayManager\GamePlayManager.h"
+#include "TimerUIEventListener.h"
 
 #include "Dx11\DX11Manager.h"
 #include "Window\Window.h"
@@ -27,22 +28,8 @@ m_IsStart(false)
 		SINGLETON_INSTANCE(Lib::Window).GetWindowSize());
 	m_pVertex->Initialize(Lib::VECTOR2(41, 64), m_pUvController->GetUV());
 	m_pVertex->SetTexture(SINGLETON_INSTANCE(Lib::TextureManager).GetTexture(ResourceId::Game::UNITY_TEX));
-	
-	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("GameStart", [this]()
-	{
-		m_IsStart = true;
-	});
 
-	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("OpenGoalDoor", [this]()
-	{
-		SINGLETON_INSTANCE(GamePlayManager).SetClearTime(m_Time);
-	});
-
-	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("CoinGet", [this]()
-	{
-		m_Time += 5;
-	});
-
+	m_pTimerUIEventListener = Lib::MakeUnique<TimerUIEventListener>(this);
 	InitializeTask();
 }
 

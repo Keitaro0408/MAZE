@@ -17,6 +17,9 @@
 #include "DxInput\KeyBoard\KeyDevice.h"
 #include "Sound\DSoundManager.h"
 #include "Window\Window.h"
+#include "DebugTool\DebugTimer.h"
+
+Lib::DebugTimer g_Timer(120);
 
 
 GameScene::GameScene() :
@@ -70,7 +73,7 @@ void GameScene::Finalize()
 	}
 	SINGLETON_INSTANCE(Lib::DSoundManager).ClearResource();
 
-	SINGLETON_INSTANCE(Lib::EventManager).AllEventRelease();
+	SINGLETON_INSTANCE(Lib::EventManager).AllEventClear();
 }
 
 void GameScene::Execute()
@@ -86,14 +89,18 @@ void GameScene::Execute()
 	}
 	else if (m_FrameCount == m_BGMSoundDelayFrame)
 	{
-		SINGLETON_INSTANCE(Lib::EventManager).CallEvent("GameStart");
+		Lib::Event gameStart("GameStart");
+		SINGLETON_INSTANCE(Lib::EventManager).SendEvent(gameStart);
 		SINGLETON_INSTANCE(Lib::DSoundManager).
 			SoundOperation(ResourceId::Game::MAIN_BGM,Lib::DSoundManager::SOUND_LOOP);
 		m_FrameCount++;
 	}
+	g_Timer.Begin();
 	SINGLETON_INSTANCE(Lib::KeyDevice).Update();
 	SINGLETON_INSTANCE(Lib::DX11Manager).BeginScene();
 	SINGLETON_INSTANCE(Lib::DX11Manager).SetDepthStencilTest(false);
 	SINGLETON_INSTANCE(Lib::TaskManager).AllExecute();
+	g_Timer.End();
+	g_Timer.TimerShow();
 	SINGLETON_INSTANCE(Lib::DX11Manager).EndScene();
 }

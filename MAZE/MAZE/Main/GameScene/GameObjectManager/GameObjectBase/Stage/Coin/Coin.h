@@ -11,10 +11,12 @@
 #include "Animation\AnimUvController.h"
 #include "SmartPointer\UniquePtr.h"
 
+class CoinEventListener;
+
 class Coin : public GameObjectBase
 {
+	friend CoinEventListener;
 public:
-
 	Coin();
 	virtual ~Coin();
 
@@ -22,6 +24,7 @@ public:
 	void Draw() override;
 
 private:
+	Lib::UniquePtr<CoinEventListener>	  m_pCoinEventListener;
 	GamePlayManager::SELECT_STAGE		  m_Stage;
 	Lib::UniquePtr<Lib::Vertex2D>		  m_pVertex;
 	Lib::UniquePtr<Lib::AnimUvController> m_pUvController;

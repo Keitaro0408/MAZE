@@ -210,7 +210,7 @@ namespace Lib
 				}
 			}
 
-			float h = tan(_fovY / 2) / 1;
+			float h = 1 / tan(_fovY / 2);
 			float w = h / _aspect;
 
 			_pMatrix->_11 = w;

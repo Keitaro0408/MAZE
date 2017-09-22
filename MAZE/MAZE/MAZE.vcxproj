@@ -72,8 +72,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Main\GamePlayManager\GamePlayEventListener.h" />
+    <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Coin\CoinEventListener.h" />
     <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Cover\Cover.h" />
     <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Coin\Coin.h" />
+    <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Door\DoorEventListener.h" />
     <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Door\Door.h" />
     <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Ladder\Ladder.h" />
     <ClInclude Include="Main\GamePlayManager\GamePlayManager.h" />
@@ -93,10 +96,17 @@
     <ClInclude Include="Main\GameScene\UIObjectManager\UIObjectBase\Timer\TimerUI.h" />
     <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Needle\Needle.h" />
     <ClInclude Include="Main\NextStageScene\NextStageScene.h" />
+    <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectBase\Player\PlayerEventListener.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="Main\GameScene\UIObjectManager\UIObjectBase\Timer\TimerUIEventListener.h" />
+    <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\StageEventListener.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Main\GamePlayManager\GamePlayEventListener.cpp" />
+    <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Coin\CoinEventListener.cpp" />
     <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Cover\Cover.cpp" />
     <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Coin\Coin.cpp" />
+    <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Door\DoorEventListener.cpp" />
     <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Door\Door.cpp" />
     <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Ladder\Ladder.cpp" />
     <ClCompile Include="Main\GamePlayManager\GamePlayManager.cpp" />
@@ -113,6 +123,12 @@
     <ClCompile Include="Main\GameScene\UIObjectManager\UIObjectBase\Timer\TimerUI.cpp" />
     <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Needle\Needle.cpp" />
     <ClCompile Include="Main\NextStageScene\NextStageScene.cpp" />
+    <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\Player\PlayerEventListener.cpp" />
+    <ClCompile Include="Main\GameScene\UIObjectManager\UIObjectBase\Timer\TimerUIEventListener.cpp" />
+    <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\StageEventListener.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MAZE.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -16,10 +16,6 @@ namespace Lib
 
 	SceneManager::~SceneManager()
 	{
-		if (m_pCurrentScene != nullptr)
-		{
-			m_pCurrentScene->Finalize();
-		}
 	}
 	
 	bool SceneManager::Execute()

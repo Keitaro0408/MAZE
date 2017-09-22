@@ -6,13 +6,17 @@
 #ifndef GAMEPLAYMANAGER_H
 #define GAMEPLAYMANAGER_H
 #include "Singleton.h"
+#include "SmartPointer\UniquePtr.h"
 #include "..\GameScene\GameObjectManager\GameObjectBase\Stage\Stage.h"
+
+class GamePlayEventListener;
 
 /**
  * ゲームの状態を管理するクラス
  */
 class GamePlayManager
 {
+	friend GamePlayEventListener;
 	friend Lib::Singleton<GamePlayManager>;
 public:
 	struct SELECT_STAGE
@@ -98,6 +102,8 @@ private:
 	float        m_Angle;  //!< ステージ角度
 	int			 m_ClearTime;   //!< ステージのクリア時間
 	SELECT_STAGE m_SelectStage; //!< 選択されたステージデータ
+
+	Lib::UniquePtr<GamePlayEventListener> m_pGamePlayEventListener;
 
 };
 

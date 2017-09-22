@@ -86,8 +86,8 @@ namespace Lib
 		~FbxFileManager() = default;
 
 		static FbxFileManager*		m_pFbxFileManager;
-		ID3D11Device* const			m_pDevice;
-		ID3D11DeviceContext* const	m_pDeviceContext;
+		ID3D11Device*				m_pDevice;
+		ID3D11DeviceContext* 		m_pDeviceContext;
 		FbxLoader*					m_pFbxLoader;
 		std::vector<FbxModel*>		m_pFbxModel;
 

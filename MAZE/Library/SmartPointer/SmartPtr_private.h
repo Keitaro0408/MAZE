@@ -3,18 +3,22 @@
 
 template<typename Type>
 SmartPtr<Type>::SmartPtr(Type* _type) :
-m_pInstance(_type)
+m_pInstance(_type),
+m_pDeleter(new DeleterImpl<Type>())
 {
 }
 
 template<typename Type>
-SmartPtr<Type>::SmartPtr()
+SmartPtr<Type>::SmartPtr() :
+m_pDeleter(new DeleterImpl<Type>())
 {
 }
 
 template<typename Type>
 SmartPtr<Type>::~SmartPtr()
 {
+	delete m_pDeleter;
+	m_pDeleter = nullptr;
 }
 
 template<typename Type>

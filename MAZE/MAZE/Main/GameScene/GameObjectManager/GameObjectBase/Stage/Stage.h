@@ -14,8 +14,11 @@
 #include "SmartPointer\UniquePtr.h"
 #include <array>
 
+class StageEventListener;
+
 class Stage : public GameObjectBase
 {
+	friend StageEventListener;
 public:
 	// 方向をもつオブジェクトの地面についている方向
 	enum STAGE_OBJECT
@@ -52,15 +55,17 @@ private:
 
 	void CreateShaderResorceView();
 
-	int							  m_TextureIndex;
-	GameObject					  m_pGameObjectBase;
-	SPIN_TYPE					  m_SpinType;
-	float						  m_SpinSpeed;
-	float						  m_Angle;
-	float						  m_AddAngleCount;
-	Lib::UniquePtr<Lib::Vertex2D> m_pVertex;
-	Lib::VECTOR2				  m_Uv[4];
-								  
+
+	int							       m_TextureIndex;
+	GameObject					       m_pGameObjectBase;
+	SPIN_TYPE					       m_SpinType;
+	float						       m_SpinSpeed;
+	float						       m_Angle;
+	float						       m_AddAngleCount;
+	Lib::UniquePtr<Lib::Vertex2D>      m_pVertex;
+	Lib::VECTOR2				       m_Uv[4];
+	Lib::UniquePtr<StageEventListener> m_pStageEventListener;
+
 	ID3D11Texture2D*			  m_pTex;
 	ID3D11RenderTargetView*		  m_pTexRTV;
 	ID3D11ShaderResourceView*	  m_pTexSRV;

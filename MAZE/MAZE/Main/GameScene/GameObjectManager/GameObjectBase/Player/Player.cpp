@@ -4,11 +4,13 @@
  * @author kotani
  */
 #include "Player.h"
+#include "PlayerEventListener.h"
 #include "..\..\..\..\ResourceId.h"
 #include "..\..\..\..\GamePlayManager\GamePlayManager.h"
 
 #include "Math\Math.h"
 #include "Event\EventManager.h"
+#include "Event\Event.h"
 #include "DxInput\KeyBoard\KeyDevice.h"
 #include "Dx11\DX11Manager.h"
 #include "Texture\TextureManager.h"
@@ -58,6 +60,7 @@ m_JumpPower(15.f)
 		SINGLETON_INSTANCE(Lib::TextureManager).GetTexture(ResourceId::Game::UNITY_TEX));
 	SetStartPos();
 
+	m_pPlayerEventListener = Lib::MakeUnique<PlayerEventListener>(this);
 	pUpdate = &Player::StartUpdate;
 	InitializeEvent();
 }
@@ -99,7 +102,8 @@ void Player::StartUpdate()
 {
 	if (m_Scale < 1.f)
 	{
-		SINGLETON_INSTANCE(Lib::EventManager).CallEvent("OpenStartDoor");
+		Lib::Event openStartDoorEvent("OpenStartDoor");
+		SINGLETON_INSTANCE(Lib::EventManager).SendEvent(openStartDoorEvent);
 		m_Scale += m_AddScaleValue;
 	}
 	m_pUvController[DOOR_OPEN]->Control(false, Lib::ANIM_NORMAL);
@@ -135,7 +139,8 @@ void Player::NormalUpdate()
 			SINGLETON_INSTANCE(Lib::KeyDevice).AnyMatchKeyCheck("Up", Lib::KEY_PUSH))
 		{
 			m_pUvController[DOOR_OPEN]->SetAnimCount(0);
-			SINGLETON_INSTANCE(Lib::EventManager).CallEvent("OpenGoalDoor");
+			Lib::Event openGoalDoorEvent("OpenGoalDoor");
+			SINGLETON_INSTANCE(Lib::EventManager).SendEvent(openGoalDoorEvent);
 			m_IsEnd = true;
 			return;
 		}
@@ -164,7 +169,8 @@ void Player::NormalUpdate()
 		SINGLETON_INSTANCE(Lib::KeyDevice).AnyMatchKeyCheck("A", Lib::KEY_PUSH) && 
 		m_UseLadder)
 	{
-		SINGLETON_INSTANCE(Lib::EventManager).CallEvent("LeftSpin");
+		Lib::Event leftSpinEvent("LeftSpin");
+		SINGLETON_INSTANCE(Lib::EventManager).SendEvent(leftSpinEvent);
 		m_SpinSpeed = -2;
 		StageSpinUpdate();
 	}
@@ -174,7 +180,8 @@ void Player::NormalUpdate()
 		SINGLETON_INSTANCE(Lib::KeyDevice).AnyMatchKeyCheck("D", Lib::KEY_PUSH) && 
 		m_UseLadder)
 	{
-		SINGLETON_INSTANCE(Lib::EventManager).CallEvent("RightSpin");
+		Lib::Event rightSpinEvent("RightSpin");
+		SINGLETON_INSTANCE(Lib::EventManager).SendEvent(rightSpinEvent);
 		m_SpinSpeed = 2;
 		StageSpinUpdate();
 	}
@@ -184,7 +191,8 @@ void Player::NormalUpdate()
 		SINGLETON_INSTANCE(Lib::KeyDevice).AnyMatchKeyCheck("W", Lib::KEY_PUSH) &&
 		m_UseLadder)
 	{
-		SINGLETON_INSTANCE(Lib::EventManager).CallEvent("ReversalSpin");
+		Lib::Event reversalSpinEvent("ReversalSpin");
+		SINGLETON_INSTANCE(Lib::EventManager).SendEvent(reversalSpinEvent);
 		m_SpinSpeed = 4;
 		StageSpinUpdate();
 	}
@@ -202,7 +210,8 @@ void Player::RespawnUpdate()
 
 	if (m_Scale < 1.f)
 	{
-		SINGLETON_INSTANCE(Lib::EventManager).CallEvent("OpenStartDoor");
+		Lib::Event openStartDoorEvent("OpenStartDoor");
+		SINGLETON_INSTANCE(Lib::EventManager).SendEvent(openStartDoorEvent);
 		m_Scale += m_AddScaleValue;
 	}
 	else
@@ -215,47 +224,6 @@ void Player::RespawnUpdate()
 
 void Player::InitializeEvent()
 {
-	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("LeftSpin", [this]()
-	{
-		int posArrayX = static_cast<int>((m_Pos.x - 480) / 64);
-		int posArrayY = static_cast<int>((m_Pos.y - 60) / 64);
-		m_Angle = 0;
-
-		m_Pos.x = static_cast<float>((posArrayX * 64 + 480) + 32);
-		m_Pos.y = static_cast<float>((posArrayY * 64 + 60) + 32);
-		m_SpinType = LEFT_SPIN;
-		m_SpinSpeed = -2;
-	});
-
-	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("RightSpin", [this]()
-	{
-		int posArrayX = static_cast<int>((m_Pos.x - 480) / 64);
-		int posArrayY = static_cast<int>((m_Pos.y - 60) / 64);
-		m_Angle = 0;
-
-		m_Pos.x = static_cast<float>((posArrayX * 64 + 480) + 32);
-		m_Pos.y = static_cast<float>((posArrayY * 64 + 60) + 32);
-		m_SpinType = RIGHT_SPIN;
-		m_SpinSpeed = 2;
-	});
-
-	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("ReversalSpin", [this]()
-	{
-		int posArrayX = static_cast<int>((m_Pos.x - 480) / 64);
-		int posArrayY = static_cast<int>((m_Pos.y - 60) / 64);
-		m_Angle = 0;
-
-		m_Pos.x = static_cast<float>((posArrayX * 64 + 480) + 32);
-		m_Pos.y = static_cast<float>((posArrayY * 64 + 60) + 32);
-		m_SpinType = REVERSAL_SPIN;
-		m_SpinSpeed = 4;
-	});
-
-
-	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("GameStart", [this]()
-	{
-		m_IsStart = true;
-	});
 }
 
 void Player::LoadAnimation(ANIMATION _animEnum, std::string _animName, int _setAnimFrame)
@@ -444,7 +412,8 @@ void Player::CheckCollision()
 		GamePlayManager::SELECT_STAGE tmpStage = stage;
 		tmpStage.Data[posArrayY][posArrayX] = 0;
 		SINGLETON_INSTANCE(GamePlayManager).SetSelectStage(tmpStage);
-		SINGLETON_INSTANCE(Lib::EventManager).CallEvent("CoinGet");
+		Lib::Event coinGetEvent("CoinGet");
+		SINGLETON_INSTANCE(Lib::EventManager).SendEvent(coinGetEvent);
 	}
 	else if (SINGLETON_INSTANCE(GamePlayManager).CheckEnableGimmick(posArrayX, posArrayY) &&
 		(stage.Data[posArrayY][posArrayX] % 10) == Stage::TRAMPOLINE_OBJECT)
@@ -522,7 +491,9 @@ void Player::CheckCollision()
 		SINGLETON_INSTANCE(GamePlayManager).CheckEnableGimmick(posArrayX, bottomPosArrayY))
 	{
 		m_Scale = 0.5;
-		SINGLETON_INSTANCE(Lib::EventManager).CallEvent("PlayerRespawn");
+		Lib::Event playerRespawnEvent("PlayerRespawn");
+		SINGLETON_INSTANCE(Lib::EventManager).SendEvent(playerRespawnEvent);
+
 		m_pUvController[DOOR_OPEN]->SetAnimCount(0);
 		m_FrameCount = 0;
 		pUpdate = &Player::RespawnUpdate;

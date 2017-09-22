@@ -11,8 +11,11 @@
 #include "Animation\AnimUvController.h"
 #include "SmartPointer\UniquePtr.h"
 
+class DoorEventListener;
+
 class Door : public GameObjectBase
 {
+	friend DoorEventListener;
 public:
 	Door();
 	~Door();
@@ -27,6 +30,7 @@ private:
 	Lib::UniquePtr<Lib::Vertex2D>		  m_pVertex;
 	Lib::UniquePtr<Lib::AnimUvController> m_pStartDoorUv;
 	Lib::UniquePtr<Lib::AnimUvController> m_pGoalDoorUv;
+	Lib::UniquePtr<DoorEventListener>     m_pDoorEventListener;
 
 };
 

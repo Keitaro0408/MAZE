@@ -4,6 +4,7 @@
 * @author kotani
 */
 #include "Camera.h"
+#include <D3DX10.h>
 
 namespace Lib
 {
@@ -26,6 +27,6 @@ namespace Lib
 
 		// プロジェクション座標変換行列の作成
 		float Aspect = m_WindowWidth / m_WindowHeight;
-		Math::MatrixPerspectiveFovLH(&m_MatProj, static_cast<float>(Math::ToRadian(_viewAngle)), Aspect, m_NearZ, m_FarZ);
+		Math::MatrixPerspectiveFovLH(&m_MatProj, Math::ToRadian(_viewAngle), Aspect, m_NearZ, m_FarZ);
 	}
 }

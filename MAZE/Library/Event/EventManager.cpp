@@ -4,44 +4,49 @@
  * @author kotani
  */
 #include "EventManager.h"
-#include "EventListnerBase.h"
+#include "Event.h"
+#include "EventListenerBase.h"
 
 namespace Lib
 {
-
-
 //----------------------------------------------------------------------------------------------------
 // Public Functions
 //----------------------------------------------------------------------------------------------------
 
-	void EventManager::AddEvent(std::string _eventName, EventListnerBase* _pEvent)
+	void EventManager::AddListener(EventListenerBase* _pEventListnerBaseList)
 	{
-		m_pEvent[_eventName].push_back(std::bind(&EventListnerBase::Action, _pEvent));
+		m_pEventListenerBase.push_back(_pEventListnerBaseList);
 	}
 	
-	void EventManager::AddEvent(std::string _eventName, std::function<void()> _event)
+	void EventManager::SendEvent(Event& _pEvent)
 	{
-		m_pEvent[_eventName].push_back(std::bind(_event));
-	}
-	
-	bool EventManager::CallEvent(std::string _eventName)
-	{
-		if (m_pEvent.find(_eventName) == m_pEvent.end()){
-			return false;
-		}
-	
-		for (unsigned int i = 0; i < m_pEvent[_eventName].size();i++)
+		for (auto itr : m_pEventListenerBase)
 		{
-			if (m_pEvent[_eventName][i] != nullptr)
-			{
-				m_pEvent[_eventName][i]();
-			}
+			itr->OnEvent(_pEvent);
 		}
-		return true;
 	}
 
-	void EventManager::AllEventRelease()
+	void EventManager::AddQueueEvent(Event* _pEvent)
 	{
-		m_pEvent.clear();
+		m_pEventQueueList.push_back(*_pEvent);
+	}
+
+	void EventManager::Execute()
+	{
+		std::list<Event>::iterator eventItr = m_pEventQueueList.begin();
+
+		for (auto itr : m_pEventQueueList)
+		{
+			for (auto itr2 : m_pEventListenerBase)
+			{
+				itr2->OnEvent(itr);
+			}
+		}
+		m_pEventQueueList.clear();
+	}
+
+	void EventManager::AllEventClear()
+	{
+		m_pEventListenerBase.clear();
 	}
 }

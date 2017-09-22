@@ -4,6 +4,7 @@
  * @author kotani
  */
 #include "Stage.h"
+#include "StageEventListener.h"
 #include "Ground\Ground.h"
 #include "Ladder\Ladder.h"
 #include "Door\Door.h"
@@ -45,34 +46,7 @@ m_TextureIndex(0)
 	m_pVertex->Initialize(Lib::VECTOR2(1920, 1080),
 		m_Uv);
 	
-	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("LeftSpin", [this]()
-	{
-		m_SpinType = LEFT_SPIN;
-		m_SpinSpeed = -2;
-		m_AddAngleCount = 0;
-	});
-
-	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("RightSpin", [this]()
-	{
-		m_SpinType = RIGHT_SPIN;
-		m_SpinSpeed = 2;
-		m_AddAngleCount = 0;
-	});
-
-	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("ReversalSpin", [this]()
-	{
-		m_SpinType = REVERSAL_SPIN;
-		m_SpinSpeed = 4;
-		m_AddAngleCount = 0;
-	});
-
-	SINGLETON_INSTANCE(Lib::EventManager).AddEvent("PlayerRespawn", [this]()
-	{
-		m_SpinType = INITIALIZE_SPIN;
-		m_SpinSpeed = 4;
-		m_AddAngleCount = 0;
-	});
-
+	m_pStageEventListener = Lib::MakeUnique<StageEventListener>(this);
 	InitializeTask(2);
 }
 

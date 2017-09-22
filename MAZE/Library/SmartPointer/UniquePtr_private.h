@@ -16,21 +16,33 @@ UniquePtr<Type>::UniquePtr()
 template<typename Type>
 UniquePtr<Type>::~UniquePtr()
 {
-	delete m_pInstance;
+	if (m_pInstance != nullptr)
+	{
+		(*m_pDeleter)(m_pInstance);
+	}
 	m_pInstance = nullptr;
 }
 
 template<typename Type>
 void UniquePtr<Type>::Reset()
 {
-	delete m_pInstance;
+	if (m_pInstance != nullptr)
+	{
+		(*m_pDeleter)(m_pInstance);
+	}
 	m_pInstance = nullptr;
 }
 
 template<typename Type>
 void UniquePtr<Type>::Reset(Type* _type)
 {
-	delete m_pInstance;
+	if (m_pInstance != nullptr)
+	{
+		(*m_pDeleter)(m_pInstance);
+		delete m_pDeleter;
+		m_pDeleter = nullptr;
+	}
+	m_pDeleter = new DeleterImpl<Type>();
 	m_pInstance = nullptr;
 	m_pInstance = _type;
 }

@@ -142,6 +142,24 @@
     <ClCompile Include="Main\NextStageScene\NextStageScene.cpp">
       <Filter>Main\NextStageScene</Filter>
     </ClCompile>
+    <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\Player\PlayerEventListener.cpp">
+      <Filter>Main\GameScene\GameObjectManager\GameObjectBase\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Coin\CoinEventListener.cpp">
+      <Filter>Main\GameScene\GameObjectManager\GameObjectBase\Stage\Coin</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\GameScene\UIObjectManager\UIObjectBase\Timer\TimerUIEventListener.cpp">
+      <Filter>Main\GameScene\UIObjectManager\UIObjectBase\TimerUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\StageEventListener.cpp">
+      <Filter>Main\GameScene\GameObjectManager\GameObjectBase\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Door\DoorEventListener.cpp">
+      <Filter>Main\GameScene\GameObjectManager\GameObjectBase\Stage\Door</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\GamePlayManager\GamePlayEventListener.cpp">
+      <Filter>Main\GamePlayManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main\App.h">
@@ -207,5 +225,29 @@
     <ClInclude Include="Main\NextStageScene\NextStageScene.h">
       <Filter>Main\NextStageScene</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectBase\Player\PlayerEventListener.h">
+      <Filter>Main\GameScene\GameObjectManager\GameObjectBase\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Coin\CoinEventListener.h">
+      <Filter>Main\GameScene\GameObjectManager\GameObjectBase\Stage\Coin</Filter>
+    </ClInclude>
+    <ClInclude Include="Main\GameScene\UIObjectManager\UIObjectBase\Timer\TimerUIEventListener.h">
+      <Filter>Main\GameScene\UIObjectManager\UIObjectBase\TimerUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\StageEventListener.h">
+      <Filter>Main\GameScene\GameObjectManager\GameObjectBase\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Main\GameScene\GameObjectManager\GameObjectBase\Stage\Door\DoorEventListener.h">
+      <Filter>Main\GameScene\GameObjectManager\GameObjectBase\Stage\Door</Filter>
+    </ClInclude>
+    <ClInclude Include="Main\GamePlayManager\GamePlayEventListener.h">
+      <Filter>Main\GamePlayManager</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MAZE.rc">
+      <Filter>リソース ファイル</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

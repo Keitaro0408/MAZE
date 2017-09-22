@@ -8,11 +8,15 @@
 
 namespace Lib
 {
-	void ObjectBase::InitializeTask(int _updatePriority, int _drawPriority)
+	void ObjectBase::InitializeTask(int _updatePriority, int _drawPriority, int _drawSetupPriority)
 	{
 		m_pUpdateTask = new Lib::UpdateTask(_updatePriority);
 		m_pUpdateTask->SetObject(this);
 		SINGLETON_INSTANCE(Lib::TaskManager).AddTask(m_pUpdateTask);
+
+		m_pDrawSetupTask = new Lib::DrawSetupTask(_drawPriority);
+		m_pDrawSetupTask->SetObject(this);
+		SINGLETON_INSTANCE(Lib::TaskManager).AddTask(m_pDrawSetupTask);
 
 		m_pDrawTask = new Lib::DrawTask(_drawPriority);
 		m_pDrawTask->SetObject(this);
@@ -23,6 +27,9 @@ namespace Lib
 	{
 		SINGLETON_INSTANCE(Lib::TaskManager).RemoveTask(m_pDrawTask);
 		Lib::SafeDelete(m_pDrawTask);
+
+		SINGLETON_INSTANCE(Lib::TaskManager).RemoveTask(m_pDrawSetupTask);
+		Lib::SafeDelete(m_pDrawSetupTask);
 
 		SINGLETON_INSTANCE(Lib::TaskManager).RemoveTask(m_pUpdateTask);
 		Lib::SafeDelete(m_pUpdateTask);

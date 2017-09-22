@@ -6,6 +6,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include "..\GameObjectBase.h"
+#include "PlayerEventListener.h"
 
 #include "SmartPointer\UniquePtr.h"
 #include "Vertex2D\Vertex2D.h"
@@ -14,6 +15,7 @@
 
 class Player : public GameObjectBase
 {
+	friend PlayerEventListener;
 public:
 	Player();
 	virtual ~Player();
@@ -93,28 +95,29 @@ private:
 
 	typedef std::array<Lib::UniquePtr<Lib::AnimUvController>, ANIM_MAX> UvController;
 
-	UvController				  m_pUvController;
-	ANIMATION					  m_Animation;
-	Lib::UniquePtr<Lib::Vertex2D> m_pVertex;
-	Lib::VECTOR2				  m_Pos;
-	float						  m_MoveSpeed;
-	float						  m_Scale;
-	float						  m_AddScaleValue;
-	float						  m_JumpPower;
-	float						  m_OldHeight;
-	int							  m_FrameCount;   //!< リスポンタイムカウント用
-	SPIN_TYPE					  m_SpinType;
-	float						  m_SpinSpeed;
-	float						  m_Angle;
-	bool						  m_IsRightDir;   //!< 右を向いていたらtrue
-	bool						  m_IsSky;
-	bool						  m_IsJump;
-	bool						  m_IsStart;      //!< ゲームが始まっているか?
-	bool						  m_IsEnd;        //!< クリア演出中か?
-	bool						  m_UseLadder;    //!< 梯子を使っているか?
-	bool						  m_IsDangle;     //!< ぶら下がっているか?
-	bool						  m_DangleEnable; //!< ぶら下がる事が出来るか
-	float						  m_Acceleration; //!< 重力加速度
+	UvController						m_pUvController;
+	ANIMATION							m_Animation;
+	Lib::UniquePtr<Lib::Vertex2D>		m_pVertex;
+	Lib::UniquePtr<PlayerEventListener> m_pPlayerEventListener;
+	Lib::VECTOR2					    m_Pos;
+	float							    m_MoveSpeed;
+	float							    m_Scale;
+	float							    m_AddScaleValue;
+	float							    m_JumpPower;
+	float							    m_OldHeight;
+	int								    m_FrameCount;   //!< リスポンタイムカウント用
+	SPIN_TYPE						    m_SpinType;
+	float							    m_SpinSpeed;
+	float							    m_Angle;
+	bool							    m_IsRightDir;   //!< 右を向いていたらtrue
+	bool							    m_IsSky;
+	bool							    m_IsJump;
+	bool							    m_IsStart;      //!< ゲームが始まっているか?
+	bool							    m_IsEnd;        //!< クリア演出中か?
+	bool							    m_UseLadder;    //!< 梯子を使っているか?
+	bool							    m_IsDangle;     //!< ぶら下がっているか?
+	bool							    m_DangleEnable; //!< ぶら下がる事が出来るか
+	float							    m_Acceleration; //!< 重力加速度
 
 };
 

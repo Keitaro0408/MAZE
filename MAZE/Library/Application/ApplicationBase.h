@@ -81,6 +81,7 @@ namespace Lib
 		static ApplicationBase* m_pInstance;
 		int m_WindowWidth;
 		int m_WindowHeight;
+		int m_RefreshRate;
 		LPCTSTR m_AppName;
 
 	};
